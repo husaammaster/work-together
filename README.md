@@ -1,3 +1,3 @@
 # Title
 
-Mein Projekt für gemeinsame Arbeit
+Projekt für ein gemeinsames Arbeit
