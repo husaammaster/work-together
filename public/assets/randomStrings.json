@@ -1,0 +1,89 @@
+{
+    "names": ["Marie", "Leon", "Alex", "Jonas", "Muhammad", "Michael", "Sarah", "David", "Fatima", "Noah", "Miriam", "Adam", "Leah", "Ibrahim", "Hannah", "Samuel"],
+    "projects": [
+        {
+            "title": "Pflanzen im Park",
+            "description": "In den Martina Park gehen und zusammen Pflanzen pflanzen. \nIch brauche dafür sowohl Pflanzenspenden, als auch Helfer und Werkzeug (Schaufeln und Gartenhandschuhe)", 
+            "maxHelpers": 4, 
+            "items": ["Schaufel", "Gartenhandschuhe", "Pflanzen"]
+        },
+        {
+            "title": "Müll aufräumen im Park",
+            "description": "In den Martina Park gehen und zusammen Müll aufräumen. \nIch brauche dafür sowohl stabile Mülltüten oder Gartensäcke, als auch Helfer und Werkzeug (Einmal-Handschuhe)", 
+            "maxHelpers": 3, 
+            "items": ["Mülltüten", "Gartensäcke", "Einmal-Handschuhe"]
+        },
+        {
+            "title": "Wand in der Moschee neu streichen",
+            "description": "Die Wand im Gebetsraum braucht einen frischen Anstrich. Wir treffen uns am Samstag um 10 Uhr.", 
+            "maxHelpers": 3, 
+            "items": ["Farbe", "Pinsel", "Abdeckfolie"]
+        },
+        {
+            "title": "Nachbarschaftsfest organisieren",
+            "description": "Wir planen ein großes Straßenfest für alle Nachbarn. Brauche Hilfe beim Aufbau, Kochen und Organisieren.", 
+            "maxHelpers": 8, 
+            "items": ["Tische", "Stühle", "Grillzubehör", "Lautsprecher"]
+        },
+        {
+            "title": "Fahrradwerkstatt für Kinder",
+            "description": "Kostenlose Fahrradreparatur für Kinder aus der Nachbarschaft. Suche Leute mit Werkzeug und Know-how.", 
+            "maxHelpers": 5, 
+            "items": ["Werkzeugkoffer", "Ersatzteile", "Luftpumpe"]
+        },
+        {
+            "title": "Lebensmittel an Obdachlose verteilen",
+            "description": "Jeden Sonntag verteilen wir warme Mahlzeiten in der Innenstadt. Helfer zum Kochen und Verteilen gesucht.", 
+            "maxHelpers": 6, 
+            "items": ["Thermobehälter", "Einweggeschirr", "Servietten"]
+        },
+        {
+            "title": "Spielplatz renovieren",
+            "description": "Der Spielplatz in der Bergstraße braucht dringend neue Farbe und Reparaturen. Gemeinsam schaffen wir das!", 
+            "maxHelpers": 7, 
+            "items": ["Holzlasur", "Schrauben", "Schleifpapier", "Pinsel"]
+        },
+        {
+            "title": "Deutschkurs für Geflüchtete",
+            "description": "Wir bieten kostenlose Deutschkurse an. Suche Lehrer und Helfer für Kinderbetreuung während des Unterrichts.", 
+            "maxHelpers": 4, 
+            "items": ["Lehrbücher", "Stifte", "Papier", "Spielzeug"]
+        },
+        {
+            "title": "Seniorennachmittag im Gemeindezentrum",
+            "description": "Einmal im Monat organisieren wir Kaffee und Kuchen für ältere Menschen. Helfer zum Backen und Unterhalten gesucht.", 
+            "maxHelpers": 5, 
+            "items": ["Kaffee", "Kuchen", "Geschirr"]
+        },
+        {
+            "title": "Kleiderspende sortieren",
+            "description": "Wir haben viele Kleiderspenden bekommen und brauchen Hilfe beim Sortieren und Verpacken für Bedürftige.", 
+            "maxHelpers": 6, 
+            "items": ["Kartons", "Klebeband", "Marker"]
+        },
+        {
+            "title": "Gemeinschaftsgarten anlegen",
+            "description": "Wir wollen einen Gemeinschaftsgarten auf dem Brachland hinter der Schule anlegen. Jeder kann mitmachen!", 
+            "maxHelpers": 10, 
+            "items": ["Spaten", "Samen", "Gießkannen", "Kompost"]
+        },
+        {
+            "title": "Hausaufgabenhilfe für Grundschüler",
+            "description": "Zweimal die Woche bieten wir kostenlose Hausaufgabenhilfe an. Suche geduldige Helfer mit Zeit am Nachmittag.", 
+            "maxHelpers": 4, 
+            "items": ["Schreibmaterial", "Taschenrechner", "Bücher"]
+        },
+        {
+            "title": "Fahrgemeinschaft zum Wochenmarkt",
+            "description": "Organisiere Fahrgemeinschaften für ältere Menschen ohne Auto zum Wochenmarkt. Fahrer mit Platz gesucht!", 
+            "maxHelpers": 3, 
+            "items": []
+        },
+        {
+            "title": "Winterkleidung sammeln",
+            "description": "Für den kommenden Winter sammeln wir warme Kleidung. Helfer zum Sammeln, Waschen und Verteilen gesucht.", 
+            "maxHelpers": 5, 
+            "items": ["Waschmittel", "Tüten", "Kleiderbügel"]
+        }
+    ]
+}

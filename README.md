@@ -26,7 +26,8 @@ erstmal vanilla js als Frontend, danach React.js falls genug Zeit da ist
 - [ ] Frontend was im Header den Username anzeigt (als Input)
 - [ ] Frontend zur Darstellung eines einzelnen Projektes 
 - [ ] Frontend zur Darstellung einer Liste von Projekten
-- [ ] Frontend zur Darstellung einer Liste von Kommentaren innerhalb der Projekte
-- [ ] Frontend zur Darstellung einer Liste von Helfern innerhalb der Projekte
+
+- [ ] Div zur Darstellung einer Liste von Kommentaren innerhalb der Projekte
+- [ ] Div zur Darstellung einer Liste von Helfern innerhalb der Projekte
 
 ## Zukunft
