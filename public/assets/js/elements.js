@@ -1,1 +1,3 @@
-export const elements = {}
+const elements = {}
+
+export default elements
