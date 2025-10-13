@@ -17,22 +17,31 @@
         </div>
         <nav>
             <a href="index.html">Home</a>
+            <a href="add_project.html">Neues Projekt</a>
+            <a href="my_projects.html">Meine Projekte</a>
         </nav>
     </header>
     <main>
         <form id="add_project_form">
-            <label for="proj_name">Projektname:</label>
-            <input type="text" id="proj_name" name="proj_name" value="a3">
+            <div>
+                <label for="proj_name">Projektname:</label>
+                <input type="text" id="proj_name" name="proj_name" value="a3">
+            </div>
             
-            <label for="description">Projektbeschreibung:</label>
-            <br>
-            <textarea id="description" name="description" style="width: 80%; height: 100px;">b1</textarea>
+            <div>
+                <label for="description">Projektbeschreibung:</label>
+                <textarea id="description" name="description" style="width: 80%; height: 100px;">b1</textarea>
+            </div>
 
-            <label for="maxHelpers">Maximale Anzahl an Helfern:</label>
-            <input type="number" id="maxHelpers" name="maxHelpers" value="3">
+            <div>
+                <label for="maxHelpers">Maximale Anzahl an Helfern:</label>
+                <input type="number" id="maxHelpers" name="maxHelpers" value="3">
+            </div>
 
-            <label for="items">Materialien (mit Komma getrennt):</label>
-            <textarea id="items" name="items" style="width: 80%; height: 100px;">d1, d2, d3, d4</textarea>
+            <div>
+                <label for="items">Materialien (mit Komma getrennt):</label>
+                <textarea id="items" name="items" style="width: 80%; height: 100px;">d1, d2, d3, d4</textarea>
+            </div>
 
             <button type="submit">Projekt hinzufügen</button>
         </form>

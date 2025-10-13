@@ -27,9 +27,15 @@ export const createProject = ({
     });
 }
 
-export const getProjectsJsonPromise = () => {
+export const getProjectsJsonPromise = (user) => {
     let result = undefined;
-    return fetch('/projects')
+    return fetch('/projects', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({user})
+    })
     .then(res => res.json())
     .then(data => {
         result = data; 

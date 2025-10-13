@@ -5,8 +5,8 @@ import dom from './dom.js';
 
 let elProjects = document.getElementById('projects');
 
-export const displayProjects = () => {
-    getProjectsJsonPromise().then(
+export const displayProjects = (user = "") => {
+    getProjectsJsonPromise(user).then(
         projectsJson => {
             projectsJson.map(project => createElProject(project));
         }

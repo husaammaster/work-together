@@ -9,18 +9,40 @@ server.get("/backend_health", (request, response) => {
   response.json({ status: "ok", message: "Backend läuft" });
 });
 
-// ============ PROJECTS ============
+// ============ PROJECTS ============ 
 // Get all projects
-server.get("/projects", (request, response) => {
-  console.log("\nServer: Alle Projekte von einem Client angefordert");
+server.post("/projects", (request, response) => {
   const projectsDB = dbScope.use(dbNames.a_projects);
-  projectsDB
-    .list({ include_docs: true })
-    .then((result) => result.rows.map((row) => row.doc))
-    .then(
-      (result) => response.json(result) // hängt die Daten an die Antwort zum Client
-    )
-    .catch(console.warn);
+
+  const proj_name = request.body.user;
+  if (proj_name != "") {
+    console.log(`\nServer: User \"${proj_name}\" requested his own projects`)
+    projectsDB.find({
+            selector:{
+                'proj_name': {
+                    $eq: proj_name
+                }
+            }
+      }).then(
+          result => result.docs
+      ).then(
+          (result) => response.json(result) // hängt die Daten an die Antwort zum Client
+      ).catch(
+          console.warn
+      )
+  }
+  else {
+    console.log("\nServer: User requested all projects");
+    projectsDB
+      .list({ include_docs: true })
+      .then((result) => result.rows.map((row) => row.doc))
+      .then(
+        (result) => response.json(result) // hängt die Daten an die Antwort zum Client
+      )
+      .catch(console.warn); 
+
+  }
+
 });
 
 // Post a project
