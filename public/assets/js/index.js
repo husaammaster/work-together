@@ -3,10 +3,16 @@
 import randomStrings from '../randomStrings.json' with {type: 'json'};
 import {socket} from './clientWebSocket.js';
 import {createProject} from './crud.js';
+import {displayProjects} from './display_projects.js';
 
 console.log('Happy developing ✨')
+console.log("Länge", randomStrings.length)
 
-
-setTimeout(() => {
-    createProject();
-}, 1000);
+Promise.all(randomStrings.projects.map(project => {
+    console.log("Projekt name", project.proj_name) 
+    return createProject(project)
+})).then(() => {
+    displayProjects();
+}). catch(
+    console.warn
+)

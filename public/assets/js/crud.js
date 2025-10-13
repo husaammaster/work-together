@@ -1,27 +1,33 @@
 "use strict"
 
 
-export const createProject = () => {
-    fetch('./new_project', {
+export const createProject = ({
+        proj_name = 'NeBaukasten 3 Projekt',
+        description = 'Neues Projekt als Test',
+        maxHelpers = 2,  // ← Should be number, not string
+        items = ["zwei linke Schrauben", "zwei rechte Schrauben", "zwei linke Nieten", "nur eine rechte Nieten"]
+    }) => {
+    let project = {
+        proj_name,
+        description,
+        maxHelpers,
+        items
+    }
+    return fetch('/new_project', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'  // ← ADD THIS
         },
-        body: JSON.stringify({
-            "proj_name": 'NeBaukasten 3 Projekt',
-            "description": 'Neues Projekt als Test',
-            "maxHelpers": 2,  // ← Should be number, not string
-            "items": ["zwei linke Schrauben", "zwei rechte Schrauben", "zwei linke Nieten", "nur eine rechte Nieten"]
-        })
+        body: JSON.stringify(project)
     })
     .then(res => res.json())
-    .then(data => console.log('\nProject created:', data))
-    .catch(err => console.warn('\nError creating project:', err));
+    .then(data => console.log('\nProject created:', data.proj_name));
+    // .catch(err => console.warn('\nError creating project:', err));
 }
 
 export const getProjectsJsonPromise = () => {
     let result = undefined;
-    return fetch('./projects')
+    return fetch('/projects')
     .then(res => res.json())
     .then(data => {
         result = data; 

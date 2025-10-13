@@ -5,7 +5,7 @@ import dom from './dom.js';
 
 let elProjects = document.getElementById('projects');
 
-const displayProjects = () => {
+export const displayProjects = () => {
     getProjectsJsonPromise().then(
         projectsJson => {
             console.log(projectsJson.map(project => project.proj_name));
@@ -61,5 +61,3 @@ const createElProject = (projectDoc) => {
     });
     console.log(projectDoc);
 }
-
-displayProjects();
