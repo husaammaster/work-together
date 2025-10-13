@@ -18,3 +18,14 @@ export const createProject = () => {
     .then(data => console.log('\nProject created:', data))
     .catch(err => console.warn('\nError creating project:', err));
 }
+
+export const getProjectsJsonPromise = () => {
+    let result = undefined;
+    return fetch('./projects')
+    .then(res => res.json())
+    .then(data => {
+        result = data; 
+        console.log('\nProjects:', result)
+        return result;
+    })
+}
