@@ -1,7 +1,33 @@
 * {
-    margin: 10px 0 0 0;
-    padding:10px;
+    margin: 4px 0 4px 0;
+    padding: 1px 10px ;
     border-radius: 10px;
     border: 1px dotted darkgray;
     color: black;
+    background-color: rgba(255,255,255, 0.4);
 }
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+body {
+    background-color: gray;
+}
+
+main {
+    max-height: 80vh;
+    overflow-y: scroll;
+}
+
+main h3 {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+#add_project_form {
+    display: flex;
+    flex-direction: column;
+    }

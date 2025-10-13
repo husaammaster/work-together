@@ -23,7 +23,7 @@ const createElProject = (projectDoc) => {
         parent: elProjects,
     });
     let elTitle = dom.create({
-        tagName: 'h2',
+        tagName: 'h4',
         content: projectDoc.proj_name,
         cssClassName: 'project',
         parent: elProject,
