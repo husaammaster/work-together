@@ -2,6 +2,7 @@
 
 import { dbScope, dbNames } from "../datenbanken/openDBs.js";
 import { server } from "../server.js";
+import formidable from 'formidable';
 
 // ============ HEALTH CHECK ============
 server.get("/backend_health", (request, response) => {
@@ -59,3 +60,26 @@ server.post("/new_project", (request, response) => {
     })
     .catch(console.warn);
 });
+
+
+server.post('/processProjectForm', (request, response) => {
+    const myForm = formidable();
+
+    myForm.parse(request, (err, fields) => {
+        if (err) console.log(err)
+        else {
+          const payload = {
+            proj_name: fields.proj_name[0],
+            description: fields.description[0],
+            maxHelpers: parseInt(fields.maxHelpers[0], 10),
+            items: fields.items[0]
+              .split(',')
+              .map(item => item.trim())
+              .filter(item => item.length > 0)
+          };
+          console.log('Parsed payload:', payload);
+        
+          response.json(payload);
+        }
+    })
+})

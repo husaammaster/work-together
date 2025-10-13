@@ -6,7 +6,7 @@
     <title>Helpers - Projekt hinzufügen</title>
     
 	<link rel="stylesheet" href="./assets/css/styles.css">  
-    <script src = "assets/js/index.js" type="module" defer></script>
+    <script src = "assets/js/add_project.js" type="module" defer></script>
 </head>
 <body>
     <header>
@@ -21,26 +21,18 @@
     </header>
     <main>
         <form id="add_project_form">
-            <div>
-                <label for="proj_name">Projektname:</label>
-                <input type="text" id="proj_name" name="proj_name">
-            </div>  
+            <label for="proj_name">Projektname:</label>
+            <input type="text" id="proj_name" name="proj_name" value="a3">
+            
+            <label for="description">Projektbeschreibung:</label>
+            <br>
+            <textarea id="description" name="description" style="width: 80%; height: 100px;">b1</textarea>
 
-            <div>
-                <label for="description">Projektbeschreibung:</label>
-                <br>
-                <textarea id="description" name="description" style="width: 80%; height: 100px;"></textarea>
-            </div>
+            <label for="maxHelpers">Maximale Anzahl an Helfern:</label>
+            <input type="number" id="maxHelpers" name="maxHelpers" value="3">
 
-            <div>
-                <label for="maxHelpers">Maximale Anzahl an Helfern:</label>
-                <input type="number" id="maxHelpers" name="maxHelpers">
-            </div>
-
-            <div>
-                <label for="items">Materialien (mit Komma getrennt):</label>
-                <textarea id="items" name="items" style="width: 80%; height: 100px;"></textarea>
-            </div>
+            <label for="items">Materialien (mit Komma getrennt):</label>
+            <textarea id="items" name="items" style="width: 80%; height: 100px;">d1, d2, d3, d4</textarea>
 
             <button type="submit">Projekt hinzufügen</button>
         </form>
@@ -49,6 +41,5 @@
         <p>© 2025 Helpers</p>
     </footer>
 
-    <script src="assets/js/display_projects.js" type="module" defer></script>
 </body>
-</html
+</html>
