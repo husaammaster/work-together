@@ -11,7 +11,7 @@ server.get("/backend_health", (request, response) => {
 // ============ PROJECTS ============
 // Get all projects
 server.get("/projects", (request, response) => {
-  console.log("\nAlle Projekte angefordert");
+  console.log("\nServer: Alle Projekte von einem Client angefordert");
   const projectsDB = dbScope.use(dbNames.a_projects);
   projectsDB
     .list({ include_docs: true })
@@ -24,7 +24,7 @@ server.get("/projects", (request, response) => {
 
 // Post a project
 server.post("/new_project", (request, response) => {
-  console.log("\nNeues Projekt angefordert");
+  console.log("\nServer: Neues Projekt angelgen angefordert");
   const projectsDB = dbScope.use(dbNames.a_projects);
 
   const project = request.body;
@@ -40,17 +40,17 @@ server.post("/new_project", (request, response) => {
     })
     .then(() => {
       if (duplicate != undefined) {
-        console.log("\nProjekt existiert bereits:", duplicate.doc.proj_name);
+        console.log("\nServer: Projekt existiert bereits:", duplicate.doc.proj_name);
         response.status(409).json({
           success: false,
           message: "Ein Projekt mit diesem Titel existiert bereits",
           existingProject: duplicate,
         });
       } else {
-        console.log("\n Projekt anlegen: ", project.proj_name);
+        console.log("\n Server: Projekt gestartet: ", project.proj_name);
         projectsDB
           .insert(project)
-          .then(console.log("\nProjekt angelegt:", project.proj_name))
+          .then(console.log("\nServer: Projekt angelegt:", project.proj_name))
           .then(
             () => response.json({ success: true, message: "Projekt angelegt" })
           )

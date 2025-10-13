@@ -8,7 +8,6 @@ let elProjects = document.getElementById('projects');
 export const displayProjects = () => {
     getProjectsJsonPromise().then(
         projectsJson => {
-            console.log(projectsJson.map(project => project.proj_name));
             projectsJson.map(project => createElProject(project));
         }
     ).catch(
@@ -59,5 +58,4 @@ const createElProject = (projectDoc) => {
             parent: elItems,
         });
     });
-    console.log(projectDoc);
 }

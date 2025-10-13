@@ -21,7 +21,7 @@ export const createProject = ({
         body: JSON.stringify(project)
     })
     .then(res => res.json())
-    .then(data => console.log('\nProject created:', data.proj_name));
+    .then(data => console.log('\nClient: Projekt wurde erfolgreich angelegt:', data.proj_name));
     // .catch(err => console.warn('\nError creating project:', err));
 }
 
@@ -31,7 +31,7 @@ export const getProjectsJsonPromise = () => {
     .then(res => res.json())
     .then(data => {
         result = data; 
-        console.log('\nProjects:', result)
+        console.log('\nClient: Alle Projekte angefordert -> ', result)
         return result;
     })
 }
