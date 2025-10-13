@@ -2,11 +2,21 @@
 
 import {getProjectsJsonPromise} from './crud.js';
 import dom from './dom.js';
+import elements from './elements.js';
+import randomStrings from '../randomStrings.json' with {type: 'json'};
+
+elements.elNutzername = document.querySelector('#nutzername');
+
+const randomName = () => {
+    return randomStrings.users[Math.floor(Math.random() * randomStrings.users.length)]
+}
+elements.elNutzername.value = randomName();
 
 let elProjects = document.getElementById('projects');
 
-export const displayProjects = (user = "") => {
-    getProjectsJsonPromise(user).then(
+export const displayProjects = (nutzer = "") => {
+    elProjects.innerHTML = "";
+    getProjectsJsonPromise(nutzer).then(
         projectsJson => {
             projectsJson.map(project => createElProject(project));
         }
@@ -21,11 +31,27 @@ const createElProject = (projectDoc) => {
         cssClassName: 'project',
         parent: elProjects,
     });
+    let elHeader = dom.create({
+        tagName: 'div',
+        styles: {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
+        cssClassName: 'project',
+        parent: elProject,
+    });
     let elTitle = dom.create({
         tagName: 'h4',
         content: projectDoc.proj_name,
         cssClassName: 'project',
-        parent: elProject,
+        
+        parent: elHeader,
+    });
+    let elUser = dom.create({
+        tagName: 'h5',
+        content: "Projekt von: " + projectDoc.nutzer,
+        cssClassName: 'project',
+        parent: elHeader,
     });
     let elDescription = dom.create({
         tagName: 'p',

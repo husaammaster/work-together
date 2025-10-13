@@ -14,13 +14,13 @@ server.get("/backend_health", (request, response) => {
 server.post("/projects", (request, response) => {
   const projectsDB = dbScope.use(dbNames.a_projects);
 
-  const proj_name = request.body.user;
-  if (proj_name != "") {
-    console.log(`\nServer: User \"${proj_name}\" requested his own projects`)
+  const nutzer = request.body.nutzer;
+  if (nutzer != "") {
+    console.log(`\nServer: User \"${nutzer}\" requested his own projects`)
     projectsDB.find({
             selector:{
-                'proj_name': {
-                    $eq: proj_name
+                'nutzer': {
+                    $eq: nutzer
                 }
             }
       }).then(
@@ -51,6 +51,7 @@ server.post("/new_project", (request, response) => {
   const projectsDB = dbScope.use(dbNames.a_projects);
 
   const project = request.body;
+  console.log("\nServer: Neues Projekt angelgen angefordert: ", project);
   // { title, description, maxHelpers, items, ... }
 
   let duplicate = undefined;
