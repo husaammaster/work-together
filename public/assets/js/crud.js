@@ -79,3 +79,58 @@ export const getProjectByIdPromise = (_id) => {
         return result;
     })
 }
+
+
+
+
+
+
+// helferlisten
+
+export const getHelperList = (proj_id) => {
+    let result = undefined;
+    return fetch('/helper_list', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({proj_id})
+    })
+    .then(result => result.json())
+    .then(data => {
+        result = data; 
+        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', result)
+        return result;
+    })
+}
+    
+export const joinProject = (proj_id, helper) => {
+    return fetch('/join_project', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({proj_id, helper})
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', data)
+        return data;
+    })
+}
+    
+export const leaveProject = (proj_id, helper) => {
+    return fetch('/leave_project', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({proj_id, helper})
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', data)
+        return data;
+    })
+}
+    

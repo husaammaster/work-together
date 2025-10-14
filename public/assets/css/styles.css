@@ -31,6 +31,10 @@ main h3 {
     }
 
 .del_project {
-    background-color: lightcoral;
+    background-color: coral;
     color: white;
+}
+
+div+.project {
+    margin-top: 20px;
 }

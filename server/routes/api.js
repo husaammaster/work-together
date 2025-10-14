@@ -136,3 +136,90 @@ server.post("/project_page", (request, response) => {
       }
     ).catch(console.warn);
 })
+
+
+
+
+// =====HELPERLISTE=====
+
+server.post("/helper_list", (request, response) => {
+  console.log("\nServer: Helferliste angefordert");
+  const projectHelpersDB = dbScope.use(dbNames.b_proj_helper_user_rel);
+  const proj_id = request.body.proj_id;
+  console.log("\nServer: Helferliste von Projekt " + proj_id + " angefordert");
+  projectHelpersDB.find({
+    selector: {
+      proj_id: {
+        $eq: proj_id
+      }
+    }
+  }).then(
+    result => {
+      console.log("\nServer: Helferliste von Projekt " + proj_id + " erhalten: ", result)
+      response.json(result)
+    }
+  ).catch(console.warn);
+})
+
+server.post("/join_project", (request, response) => {
+  console.log("\nServer: Join Helferliste angefordert");
+  const projectHelpersDB = dbScope.use(dbNames.b_proj_helper_user_rel);
+  const proj_id = request.body.proj_id;
+  const helper = request.body.helper;
+  console.log("\nServer: Join Helferliste von Projekt " + proj_id + " angefordert");
+  projectHelpersDB.find({
+    selector: {
+      proj_id: {
+        $eq: proj_id
+      },
+      helper: {
+        $eq: helper
+      }
+    }
+  })
+  .then(result => {
+    if (result.docs.length > 0) {
+      console.log("\nServer: Helfer " + helper + " ist bereits in der Helferliste von Projekt " + proj_id)
+      response.json({ success: false, message: "Helfer " + helper + " ist bereits in der Helferliste von Projekt " + proj_id })
+    }
+    else {
+      projectHelpersDB.insert({proj_id, helper})
+    .then(console.log("\nServer: Join Helferliste von Projekt " + proj_id + " angefordert"))
+    .then(
+      () => response.json({ success: true, message: "Projekt angelegt" })
+    )
+    .catch(console.warn)
+    }
+  })
+})
+
+server.post("/leave_project", (request, response) => {
+  console.log("\nServer: Leave Helferliste angefordert");
+  const projectHelpersDB = dbScope.use(dbNames.b_proj_helper_user_rel);
+  const proj_id = request.body.proj_id;
+  const helper = request.body.helper;
+  console.log("\nServer: Leave Helferliste von Projekt " + proj_id + " angefordert");
+  projectHelpersDB.find({
+    selector: {
+      proj_id: {
+        $eq: proj_id
+      },
+      helper: {
+        $eq: helper
+      }
+    }
+  }).then(
+    result => {
+      console.log("\nServer: Helfereintrag existiert: ", result.docs[0])
+      return result.docs[0];
+    }
+  ).then((result) => {
+      console.log("\nServer: Eintrag " + helper + " von Projekt " + proj_id + " wird entfernt")
+      projectHelpersDB.destroy(result._id, result._rev)
+    })
+    .then(console.log("\nServer: Eintrag " + helper + " von Projekt " + proj_id + " entfernt"))
+    .then(
+      () => response.json({ success: true, message: "Projekt angelegt" })
+    )
+    .catch(console.warn);
+})

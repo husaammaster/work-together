@@ -4,6 +4,7 @@ import {getProjectsJsonPromise, deleteProject} from './crud.js';
 import dom from './dom.js';
 import elements from './elements.js';
 import randomStrings from '../randomStrings.json' with {type: 'json'};
+import {getHelperList} from './crud.js';
 
 elements.elNutzername = document.querySelector('#nutzername');
 
@@ -37,7 +38,6 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
             display: 'flex',
             justifyContent: 'space-between',
         },
-        cssClassName: 'project',
         parent: elProject,
     });
     let elLink = dom.create({
@@ -53,7 +53,7 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     let elTitle = dom.create({
         tagName: 'h4',
         content: projectDoc.proj_name,
-        cssClassName: 'project',
+        cssClassName: 'title',
         parent: elLink,
     });
 
@@ -66,7 +66,7 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     let elUser = dom.create({
         tagName: 'h5',
         content: "Projekt von: " + projectDoc.nutzer,
-        cssClassName: 'project',
+        cssClassName: 'user',
         parent: elHeader,
         styles: my_style,
     });
@@ -89,31 +89,46 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     let elDescription = dom.create({
         tagName: 'p',
         content: projectDoc.description,
-        cssClassName: 'project',
+        cssClassName: 'description',
         parent: elProject,
     });
-    let elMaxHelpers = dom.create({
-        tagName: 'p',
-        content: "Anzahl gesuchter Helfer: " + projectDoc.maxHelpers,
-        cssClassName: 'project',
-        parent: elProject,
-    });
+    getHelperList(projectDoc._id)
+    .then(result => {
+        let color = "black"
+        if (result.docs.length == projectDoc.maxHelpers)
+            color = "limegreen"
+        else if (result.docs.length < projectDoc.maxHelpers/4)
+            color = "red"
+        else if (result.docs.length < projectDoc.maxHelpers/2)
+            color = "orange"
+        else if (result.docs.length > projectDoc.maxHelpers)
+            color = "lightgray"
+        let elMaxHelpers = dom.create({
+            tagName: 'p',
+            content: "Anzahl gesuchter Helfer: " + result.docs.length + " / " + projectDoc.maxHelpers,
+            cssClassName: 'maxHelpers',
+            parent: elProject,
+            styles: {
+                color: color,
+            },
+        })}
+    )
     let elListe = dom.create({
         tagName: 'p',
         content: "Liste der Materialien: ",
-        cssClassName: 'project',
+        cssClassName: 'listTitle',
         parent: elProject,
     });
     let elItems = dom.create({
         tagName: 'ul',
-        cssClassName: 'project',
+        cssClassName: 'listItems',
         parent: elProject,
     });
     projectDoc.items.map(item => {
         let elItem = dom.create({
             tagName: 'li',
             content: item,
-            cssClassName: 'project',
+            cssClassName: 'item',
             parent: elItems,
         });
     });

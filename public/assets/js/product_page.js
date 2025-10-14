@@ -3,7 +3,7 @@
 import {getProjectByIdPromise} from './crud.js';
 import dom from './dom.js';
 import elements from './elements.js';
-import {deleteProject} from './crud.js';
+import {deleteProject, getHelperList, joinProject, leaveProject} from './crud.js';
 
 // parse URL parameters and open the project with the given id
 const urlParams = new URLSearchParams(window.location.search);
@@ -24,6 +24,88 @@ getProjectByIdPromise(projectId).then(project => {
 });
     
 
+const createElHelferListe = (projectDoc, parent, my_project = false) => {
+    const elContainer = dom.create({
+        tagName: 'div',
+        cssClassName: 'helferliste',
+        parent: parent,
+    });
+    const elTitle = dom.create({
+        tagName: 'h3',
+        content: 'Helferliste',
+        parent: elContainer,
+    });
+    const elListe = dom.create({
+        tagName: 'ul',
+        cssClassName: 'helferliste',
+        parent: elContainer,
+    });
+    projectDoc.helfer = getHelperList(projectDoc._id)
+    .then(result => {
+        result.docs.map(helfer => {
+            const elItem = dom.create({
+                tagName: 'li',
+                content: helfer.helper,
+                cssClassName: 'helfer',
+                parent: elListe,
+            });
+            if (helfer.helper === elements.elNutzername.value) {
+                const elDeleteButton = dom.create({
+                    tagName: 'button',
+                    content: 'Verlassen',
+                    cssClassName: 'verlassen',
+                    parent: elItem,
+                    listeners: {
+                        click: () => {
+                            leaveProject(projectDoc._id, elements.elNutzername.value);
+                            window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+                        }
+                    },
+                    styles: {
+                        backgroundColor: 'coral',
+                        margin: '0 0 0 10px',
+                        color: 'white',
+                        cursor: 'pointer',
+                    }
+                });
+            }
+
+            let color = "black"
+            if (result.docs.length == projectDoc.maxHelpers)
+                color = "limegreen"
+            else if (result.docs.length < projectDoc.maxHelpers/4)
+                color = "red"
+            else if (result.docs.length < projectDoc.maxHelpers/2)
+                color = "orange"
+            else if (result.docs.length > projectDoc.maxHelpers)
+                color = "lightgray"
+            document.querySelector('.maxHelpers').innerHTML = "Anzahl gesuchter Helfer: "  + result.docs.length + " / " + projectDoc.maxHelpers;
+            document.querySelector('.maxHelpers').style.color = color;
+        })
+        if (!my_project) {
+            const elBeitreten = dom.create({
+                tagName: 'button',
+                content: 'Beitreten',
+                cssClassName: 'beitreten',
+                parent: elListe,
+                listeners: {
+                    click: () => {
+                        joinProject(projectDoc._id, nutzer);
+                        window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+                    }
+                },
+                styles: {
+                    backgroundColor: 'lightblue',
+                    color: 'white',
+                    cursor: 'pointer',
+                }
+            });
+        }
+    });
+
+    return elContainer;
+}
+
 const createElProjectPage = (projectDoc, my_project = false) => {
     let elProject = dom.create({
         tagName: 'div',
@@ -36,7 +118,6 @@ const createElProjectPage = (projectDoc, my_project = false) => {
             display: 'flex',
             justifyContent: 'space-between',
         },
-        cssClassName: 'project',
         parent: elProject,
     });
     let elLink = dom.create({
@@ -50,9 +131,9 @@ const createElProjectPage = (projectDoc, my_project = false) => {
         parent: elHeader,
     });
     let elTitle = dom.create({
-        tagName: 'h4',
+        tagName: 'h2',
         content: projectDoc.proj_name,
-        cssClassName: 'project',
+        cssClassName: 'title',
         parent: elLink,
     });
 
@@ -65,7 +146,7 @@ const createElProjectPage = (projectDoc, my_project = false) => {
     let elUser = dom.create({
         tagName: 'h5',
         content: "Projekt von: " + projectDoc.nutzer,
-        cssClassName: 'project',
+        cssClassName: 'user',
         parent: elHeader,
         styles: my_style,
     });
@@ -88,31 +169,32 @@ const createElProjectPage = (projectDoc, my_project = false) => {
     let elDescription = dom.create({
         tagName: 'p',
         content: projectDoc.description,
-        cssClassName: 'project',
+        cssClassName: 'description',
         parent: elProject,
     });
     let elMaxHelpers = dom.create({
         tagName: 'p',
         content: "Anzahl gesuchter Helfer: " + projectDoc.maxHelpers,
-        cssClassName: 'project',
+        cssClassName: 'maxHelpers',
         parent: elProject,
     });
+    createElHelferListe(projectDoc, elProject, my_project);
     let elListe = dom.create({
         tagName: 'p',
         content: "Liste der Materialien: ",
-        cssClassName: 'project',
+        cssClassName: 'itemTitle',
         parent: elProject,
     });
     let elItems = dom.create({
         tagName: 'ul',
-        cssClassName: 'project',
+        cssClassName: 'itemList',
         parent: elProject,
     });
     projectDoc.items.map(item => {
         let elItem = dom.create({
             tagName: 'li',
             content: item,
-            cssClassName: 'project',
+            cssClassName: 'item',
             parent: elItems,
         });
     });
