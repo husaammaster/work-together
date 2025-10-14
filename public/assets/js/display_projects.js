@@ -1,6 +1,6 @@
 "use strict"
 
-import {getProjectsJsonPromise} from './crud.js';
+import {getProjectsJsonPromise, deleteProject} from './crud.js';
 import dom from './dom.js';
 import elements from './elements.js';
 import randomStrings from '../randomStrings.json' with {type: 'json'};
@@ -16,16 +16,17 @@ let elProjects = document.getElementById('projects');
 
 export const displayProjects = (nutzer = "") => {
     elProjects.innerHTML = "";
+    let deleteButton = (nutzer != "") ? true : false;
     getProjectsJsonPromise(nutzer).then(
         projectsJson => {
-            projectsJson.map(project => createElProject(project));
+            projectsJson.map(project => createElProject(project, deleteButton));
         }
     ).catch(
         console.warn
     );
 }
 
-const createElProject = (projectDoc) => {
+const createElProject = (projectDoc, deleteButton = false) => {
     let elProject = dom.create({
         tagName: 'div',
         cssClassName: 'project',
@@ -53,6 +54,22 @@ const createElProject = (projectDoc) => {
         cssClassName: 'project',
         parent: elHeader,
     });
+    if (deleteButton) {
+        let elDeleteButton = dom.create({
+            tagName: 'button',
+            content: "Löschen",
+            cssClassName: 'del_project',
+            parent: elHeader,
+            listeners: {
+                click: () => {deleteProject(projectDoc._id, projectDoc._rev).then(
+                    () => displayProjects(elements.elNutzername.value)
+                    ).catch(
+                        console.warn
+                    )
+                }
+            }
+        });
+    }
     let elDescription = dom.create({
         tagName: 'p',
         content: projectDoc.description,

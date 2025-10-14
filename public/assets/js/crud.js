@@ -3,6 +3,21 @@ import elements from './elements.js';
 elements.elNutzername=document.querySelector('#nutzername');
 
 
+export const deleteProject = (_id, _rev) => {
+    return fetch('/delete_project', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({ _id, _rev })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('\nClient: Projekt wurde erfolgreich gelöscht:', data);
+        return data;
+    });
+}
+
 export const createProject = ({
         nutzer = elements.elNutzername.value,
         proj_name = 'NeBaukasten 3 Projekt',

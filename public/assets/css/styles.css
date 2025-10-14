@@ -12,9 +12,7 @@ header {
     justify-content: space-between;
 }
 
-body {
-    background-color: gray;
-}
+body { background-color: gray; }
 
 main {
     max-height: 80vh;
@@ -31,3 +29,8 @@ main h3 {
     display: flex;
     flex-direction: column;
     }
+
+.del_project {
+    background-color: lightcoral;
+    color: white;
+}

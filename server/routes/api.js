@@ -45,7 +45,9 @@ server.post("/projects", (request, response) => {
 
 });
 
-// Post a project
+
+
+// Post create a project
 server.post("/new_project", (request, response) => {
   console.log("\nServer: Neues Projekt angelgen angefordert");
   const projectsDB = dbScope.use(dbNames.a_projects);
@@ -84,6 +86,20 @@ server.post("/new_project", (request, response) => {
     .catch(console.warn);
 });
 
+
+server.post("/delete_project", (request, response) => {
+  console.log("\nServer: Projekt gelöscht angefordert");
+  const projectsDB = dbScope.use(dbNames.a_projects);
+  const _id = request.body._id;
+  const _rev = request.body._rev;
+  console.log("\nServer: Projekt gelöscht angefordert: ", _id, _rev);
+  projectsDB.destroy(_id, _rev)
+    .then(console.log("\nServer: Projekt gelöscht: ", _id, _rev))
+    .then(
+      () => response.json({ success: true, message: "Projekt gelöscht" })
+    )
+    .catch(console.warn);
+});
 
 server.post('/processProjectForm', (request, response) => {
     const myForm = formidable();
