@@ -43,3 +43,6 @@ dom.create({
 
 displayProjects();
 
+elements.elNutzername.addEventListener('change', () => {
+    displayProjects()
+})

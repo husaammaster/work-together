@@ -14,19 +14,18 @@ elements.elNutzername.value = randomName();
 
 let elProjects = document.getElementById('projects');
 
-export const displayProjects = (nutzer = "") => {
+export const displayProjects = (filter = "") => {
     elProjects.innerHTML = "";
-    let deleteButton = (nutzer != "") ? true : false;
-    getProjectsJsonPromise(nutzer).then(
+    getProjectsJsonPromise(filter).then(
         projectsJson => {
-            projectsJson.map(project => createElProject(project, deleteButton));
+            projectsJson.map(project => createElProject(project, project.nutzer === elements.elNutzername.value, filter));
         }
     ).catch(
         console.warn
     );
 }
 
-const createElProject = (projectDoc, deleteButton = false) => {
+const createElProject = (projectDoc, my_project = false, filter = "") => {
     let elProject = dom.create({
         tagName: 'div',
         cssClassName: 'project',
@@ -48,13 +47,21 @@ const createElProject = (projectDoc, deleteButton = false) => {
         
         parent: elHeader,
     });
+
+    let my_style = {}
+    if (my_project) {
+        my_style = {
+            backgroundColor: 'lightblue',
+        }
+    }
     let elUser = dom.create({
         tagName: 'h5',
         content: "Projekt von: " + projectDoc.nutzer,
         cssClassName: 'project',
         parent: elHeader,
+        styles: my_style,
     });
-    if (deleteButton) {
+    if (my_project) {
         let elDeleteButton = dom.create({
             tagName: 'button',
             content: "Löschen",
@@ -62,7 +69,7 @@ const createElProject = (projectDoc, deleteButton = false) => {
             parent: elHeader,
             listeners: {
                 click: () => {deleteProject(projectDoc._id, projectDoc._rev).then(
-                    () => displayProjects(elements.elNutzername.value)
+                    () => displayProjects(filter)
                     ).catch(
                         console.warn
                     )
