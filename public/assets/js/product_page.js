@@ -1,35 +1,34 @@
 "use strict"
 
-import {getProjectsJsonPromise, deleteProject} from './crud.js';
+import {getProjectByIdPromise} from './crud.js';
 import dom from './dom.js';
 import elements from './elements.js';
-import randomStrings from '../randomStrings.json' with {type: 'json'};
+import {deleteProject} from './crud.js';
 
+// parse URL parameters and open the project with the given id
+const urlParams = new URLSearchParams(window.location.search);
+const projectId = urlParams.get('id');
+const nutzer = urlParams.get('nutzer');
+
+console.log("URL Parameter: projectId = " + projectId + ", nutzer = " + nutzer);
+
+elements.elMain = document.querySelector('main');
 elements.elNutzername = document.querySelector('#nutzername');
+elements.elNutzername.value = nutzer;
+elements.elNutzername.addEventListener('change', () => {
+    window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+});
 
-const randomName = () => {
-    return randomStrings.users[Math.floor(Math.random() * randomStrings.users.length)]
-}
-elements.elNutzername.value = randomName();
+getProjectByIdPromise(projectId).then(project => {
+    createElProjectPage(project, nutzer == project.nutzer);
+});
+    
 
-let elProjects = document.getElementById('projects');
-
-export const displayProjects = (filter = "") => {
-    elProjects.innerHTML = "";
-    getProjectsJsonPromise(filter).then(
-        projectsJson => {
-            projectsJson.map(project => createElProject(project, project.nutzer === elements.elNutzername.value, filter));
-        }
-    ).catch(
-        console.warn
-    );
-}
-
-const createElProject = (projectDoc, my_project = false, filter = "") => {
+const createElProjectPage = (projectDoc, my_project = false) => {
     let elProject = dom.create({
         tagName: 'div',
         cssClassName: 'project',
-        parent: elProjects,
+        parent: elements.elMain,
     });
     let elHeader = dom.create({
         tagName: 'div',
@@ -73,12 +72,12 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     if (my_project) {
         let elDeleteButton = dom.create({
             tagName: 'button',
-            content: "Löschen",
+            content: "Löschen und zurück zu Home",
             cssClassName: 'del_project',
             parent: elHeader,
             listeners: {
                 click: () => {deleteProject(projectDoc._id, projectDoc._rev).then(
-                    () => displayProjects(filter)
+                    () => window.location.href = "index.html"
                     ).catch(
                         console.warn
                     )

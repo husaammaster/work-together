@@ -13,7 +13,7 @@ export const deleteProject = (_id, _rev) => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log('\nClient: Projekt wurde erfolgreich gelöscht:', data);
+        console.log('\nClient: Projekt wurde erfolgreich gelöscht -> result: ', data);
         return data;
     });
 }
@@ -41,24 +41,41 @@ export const createProject = ({
     })
     .then(res => res.json())
     .then(data => {
-        console.log('\nClient: Projekt wurde erfolgreich angelegt:', data.proj_name);
+        console.log('\nClient: Projekt wurde erfolgreich angelegt -> result: ', data);
         return data;
     });
 }
 
-export const getProjectsJsonPromise = (nutzer) => {
+export const getProjectsJsonPromise = (filter) => {
     let result = undefined;
     return fetch('/projects', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'  // ← ADD THIS
         },
-        body: JSON.stringify({nutzer})
+        body: JSON.stringify({filter})
     })
     .then(res => res.json())
     .then(data => {
         result = data; 
-        console.log('\nClient: Alle Projekte angefordert -> ', result)
+        console.log('\nClient: Alle Projekte angefordert -> result: ', result)
+        return result;
+    })
+}
+
+export const getProjectByIdPromise = (_id) => {
+    let result = undefined;
+    return fetch('/project_page', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({_id})
+    })
+    .then(result => result.json())
+    .then(data => {
+        result = data; 
+        console.log('\nClient: Projekt mit ID ' + _id + ' angefordert -> result: ', result)
         return result;
     })
 }

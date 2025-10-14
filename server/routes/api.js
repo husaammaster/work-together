@@ -14,13 +14,13 @@ server.get("/backend_health", (request, response) => {
 server.post("/projects", (request, response) => {
   const projectsDB = dbScope.use(dbNames.a_projects);
 
-  const nutzer = request.body.nutzer;
-  if (nutzer != "") {
-    console.log(`\nServer: User \"${nutzer}\" requested his own projects`)
+  const filter = request.body.filter;
+  if (filter != "") {
+    console.log(`\nServer: User \"${filter}\" requested his own projects`)
     projectsDB.find({
             selector:{
                 'nutzer': {
-                    $eq: nutzer
+                    $eq: filter
                 }
             }
       }).then(
@@ -121,4 +121,18 @@ server.post('/processProjectForm', (request, response) => {
           response.json(payload);
         }
     })
+})
+
+server.post("/project_page", (request, response) => {
+  console.log("\nServer: Projektseite angefordert");
+  const projectsDB = dbScope.use(dbNames.a_projects);
+  const _id = request.body._id;
+  console.log("\nServer: Projektseite von _id: ", _id , "angefordert");
+  projectsDB.get(_id)
+    .then(
+      result => {
+        console.log("\nServer: Projektseite von _id: ", _id , "erhalten: ", result)
+        response.json(result)
+      }
+    ).catch(console.warn);
 })

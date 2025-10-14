@@ -31,9 +31,11 @@ Jeder Kommentar hat einen Absender, einen Timestamp und einen Text und ist einem
 - Frontend zur Darstellung einer Liste von Projekten
 - Projekt erstellen (Add Project Page)
 - Projekte nach Nutzer filtern (My Projects Page)
+- Projekt löschen (Delete mit _id und _rev)
+- Eigene Projekte visuell hervorheben (lightblue Name)
+- Delete-Button nur für eigene Projekte
 - Basis-Styling mit CSS
-- DOM-Manipulation Utilities
-- CRUD-Operationen für Projekte (Create, Read)
+- CRUD-Operationen für Projekte (Create, Read, Delete)
 
 ### Teilweise implementiert, aber pausiert:
 - WebSocket-Handlers (Infrastruktur vorhanden, aber nicht genutzt)
@@ -44,11 +46,11 @@ Jeder Kommentar hat einen Absender, einen Timestamp und einen Text und ist einem
 | Priorität | Feature | Beschreibung | Geschätzte Zeit | Tag |
 |-----------|---------|--------------|-----------------|-----|
 | **HOCH** | **Projekt-Detailseite** | Einzelne Projekt-Ansicht mit allen Details | **2-3h** | **4** |
-| **HOCH** | **Projekt bearbeiten/löschen** | Edit/Delete Funktionalität für eigene Projekte | **1-2h** | **4** |
 | **HOCH** | **Helfer-System (Backend)** | API-Endpoints zum Beitreten/Verlassen von Projekten | **1-2h** | **4** |
 | **HOCH** | **Helfer-System (Frontend)** | Button "Als Helfer beitreten" + Helfer-Liste anzeigen | **2-3h** | **4** |
 | **HOCH** | **Kommentar-System (Backend)** | API-Endpoints für Kommentare (Create, Read) | **1-2h** | **5** |
 | **HOCH** | **Kommentar-System (Frontend)** | Kommentar-Formular + Kommentar-Liste in Projekt-Details | **2-3h** | **5** |
+| **OPTIONAL** | **Projekt bearbeiten** | Edit Funktionalität für eigene Projekte | **1-2h** | **4** |
 | **NIEDRIG** | **Styling verbessern** | bessere UX | **1-2h** | **6** |
 | **OPTIONAL** | **React.js Migration** | Frontend auf React umstellen | **8-12h** | - |
 
@@ -56,7 +58,6 @@ Jeder Kommentar hat einen Absender, einen Timestamp und einen Text und ist einem
 
 #### Tag 4 - 8h
 - Projekt-Detailseite (2-3h)
-- Eigenes Projekt bearbeiten/löschen (1-2h)
 - Helfer-System Backend (1-2h)
 - Helfer-System Frontend (2-3h)
 - Testing & Bugfixes (1h)
@@ -65,6 +66,7 @@ Jeder Kommentar hat einen Absender, einen Timestamp und einen Text und ist einem
 - Kommentar-System Backend (1-2h)
 - Kommentar-System Frontend (2-3h)
 - Testing & Integration (1-2h)
+- Buffer für Nacharbeiten (2-3h)
 
 #### Tag 6 (letzter Tag) - 8h
 - Styling & UX-Verbesserungen (1-2h)
