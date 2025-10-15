@@ -131,7 +131,7 @@ server.post("/project_page", (request, response) => {
   projectsDB.get(_id)
     .then(
       result => {
-        console.log("\nServer: Projektseite von _id: ", _id , "erhalten: ", result)
+        console.log("\nServer: Projektseite von _id: ", _id , "gelesen: ")
         response.json(result)
       }
     ).catch(console.warn);
@@ -155,7 +155,7 @@ server.post("/helper_list", (request, response) => {
     }
   }).then(
     result => {
-      console.log("\nServer: Helferliste von Projekt " + proj_id + " erhalten: ", result)
+      console.log("\nServer: Helferliste von Projekt " + proj_id + " gelesen: ")
       response.json(result)
     }
   ).catch(console.warn);
@@ -222,4 +222,60 @@ server.post("/leave_project", (request, response) => {
       () => response.json({ success: true, message: "Projekt angelegt" })
     )
     .catch(console.warn);
+})
+
+
+
+
+// ======== COMMENTS ========
+
+server.post("/new_comment", (request, response) => {
+  console.log("\nServer: Neuer Kommentar angefordert");
+  const commentsDB = dbScope.use(dbNames.a_comments);
+  const comment = {
+    proj_id: request.body.proj_id,
+    comment: request.body.comment,
+    user: request.body.user,
+    timestamp: request.body.timestamp,
+  };
+  console.log("\nServer: Neuer Kommentar angefordert: ", comment);
+  commentsDB.insert(comment)
+    .then(result => console.log("\nServer: Neuer Kommentar angefordert: ", result))
+    .then(
+      () => response.json({ success: true, message: "Projekt angelegt" })
+    )
+    .catch(console.warn); 
+})
+
+server.post("/delete_comment", (request, response) => {
+  console.log("\nServer: Kommentar löschen angefordert");
+  const commentsDB = dbScope.use(dbNames.a_comments);
+  const comment_id = request.body._id;
+  const comment_rev = request.body._rev;
+  console.log("\nServer: Kommentar löschen angefordert: ", comment_id, comment_rev);
+  commentsDB.destroy(comment_id, comment_rev)
+    .then(console.log("\nServer: Kommentar löschen erfolgreich: ", comment_id, comment_rev))
+    .then(
+      () => response.json({ success: true, message: "Projekt angelegt" })
+    )
+    .catch(console.warn); 
+})
+
+server.post("/comment_list", (request, response) => {
+  console.log("\nServer: Kommentarliste angefordert");
+  const commentsDB = dbScope.use(dbNames.a_comments);
+  const proj_id = request.body.proj_id;
+  console.log("\nServer: Kommentarliste von Projekt " + proj_id + " angefordert");
+  commentsDB.find({
+    selector: {
+      proj_id: {
+        $eq: proj_id
+      }
+    }
+  }).then(
+    result => {
+      console.log("\nServer: Kommentarliste von Projekt " + proj_id + " erhalten: ", result)
+      response.json(result)
+    }
+  ).catch(console.warn); 
 })

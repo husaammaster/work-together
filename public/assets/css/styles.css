@@ -12,7 +12,11 @@ header {
     justify-content: space-between;
 }
 
-body { background-color: gray; }
+body { 
+    background-color: gray; 
+    max-width: min(800px, 80%);
+    margin: auto;
+}
 
 main {
     max-height: 80vh;
@@ -37,4 +41,8 @@ main h3 {
 
 div+.project {
     margin-top: 20px;
+}
+
+li {
+    margin-left: 20px;
 }

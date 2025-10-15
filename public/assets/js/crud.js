@@ -134,3 +134,57 @@ export const leaveProject = (proj_id, helper) => {
     })
 }
     
+
+
+
+// ======= Kommentare =======
+
+export const getCommentList = (proj_id) => {
+    let result = undefined;
+    return fetch('/comment_list', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({proj_id})
+    })
+    .then(result => result.json())
+    .then(data => {
+        result = data; 
+        console.log('\nClient: Kommentarliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', result)
+        return result;
+    })
+}
+
+export const newComment = (proj_id, comment, user, timestamp) => {
+    return fetch('/new_comment', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({proj_id, comment, user, timestamp})
+    })
+    .then(result => result.json())
+    .then(data => {
+        console.log('\nClient: Kommentar erzeugung angefordert -> result: ', data)
+        return data;
+    })
+}
+
+export const deleteComment = (comment_id, comment_rev) => {
+    return fetch('/delete_comment', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({
+            _id: comment_id,
+            _rev: comment_rev
+        })
+    })
+    .then(result => result.json())
+    .then(data => {
+        console.log('\nClient: Kommentar löschen angefordert -> result: ', data)
+        return data;
+    })
+}

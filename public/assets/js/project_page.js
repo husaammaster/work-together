@@ -3,7 +3,7 @@
 import {getProjectByIdPromise} from './crud.js';
 import dom from './dom.js';
 import elements from './elements.js';
-import {deleteProject, getHelperList, joinProject, leaveProject} from './crud.js';
+import {deleteProject, getHelperList, joinProject, leaveProject, getCommentList, newComment, deleteComment} from './crud.js';
 
 // parse URL parameters and open the project with the given id
 const urlParams = new URLSearchParams(window.location.search);
@@ -29,6 +29,9 @@ const createElHelferListe = (projectDoc, parent, my_project = false) => {
         tagName: 'div',
         cssClassName: 'helferliste',
         parent: parent,
+        styles: {
+            margin: '20px 0 0 0',
+        }
     });
     const elTitle = dom.create({
         tagName: 'h3',
@@ -106,6 +109,148 @@ const createElHelferListe = (projectDoc, parent, my_project = false) => {
     return elContainer;
 }
 
+const createElCommentList = (projectDoc, elProject) => {
+    const elContainer = dom.create({
+        tagName: 'div',
+        cssClassName: 'commentListContainer',
+        parent: elProject,
+        styles: {
+            margin: '20px 0 0 0',
+        }
+    });
+    const elTitle = dom.create({
+        tagName: 'h3',
+        content: 'Kommentare',
+        cssClassName: 'commentListTitle',
+        parent: elContainer,
+    }); 
+
+    const elCommentList = dom.create({
+        tagName: 'ul',
+        cssClassName: 'commentList',
+        parent: elContainer,
+    });
+    projectDoc.comments = getCommentList(projectDoc._id)
+    .then(result => {
+        result.docs.map(comment => {
+            const elItem = dom.create({
+                tagName: 'li',
+                cssClassName: 'comment',
+                parent: elCommentList,
+            });
+            const elHeader = dom.create({
+                tagName: 'div',
+                cssClassName: 'commentHeader',
+                parent: elItem,
+                styles: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                }
+            });
+            const elUser = dom.create({
+                tagName: 'p',
+                content: comment.user,
+                parent: elHeader,
+                styles: {
+                    color: 'gray',
+                    fontWeight: 'bold',
+                }
+            }); 
+
+            if (comment.user === elements.elNutzername.value) {
+                const elDeleteButton = dom.create({
+                    tagName: 'button',
+                    content: 'Löschen',
+                    cssClassName: 'deleteComment',
+                    parent: elHeader,
+                    listeners: {
+                        click: () => {
+                            deleteComment(comment._id, comment._rev);
+                            window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+                        }
+                    },
+                    styles: {
+                        backgroundColor: 'coral',
+                        margin: '0 0 0 10px',
+                        color: 'white',
+                        cursor: 'pointer',
+                    }
+                });
+            }
+            if (comment.user == projectDoc.nutzer) {
+                const elOwnerBadge = dom.create({
+                    tagName: 'span',
+                    content: 'Projektleiter',
+                    cssClassName: 'ownerBadge',
+                    parent: elHeader,
+                    styles: {
+                        backgroundColor: 'lightblue',
+                        color: 'white',
+                        borderRadius: '5px',
+                        padding: '2px 5px',
+                    }
+                });
+            }
+            const elTimestamp = dom.create({
+                tagName: 'p',
+                content: new Date(comment.timestamp).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }),
+                parent: elHeader,
+                styles: {
+                    color: 'gray',
+                    fontWeight: 'bold',
+                }
+            });
+            const elComment = dom.create({
+                tagName: 'p',
+                content: comment.comment,
+                parent: elItem,
+                styles: {
+                    margin: '0 0 0 10px',
+                }
+            });
+        })
+    })
+    const elNewCommentInput = dom.create({
+        tagName: 'textarea',
+        cssClassName: 'newCommentInput',
+        parent: elContainer,
+        styles: {
+            width: '80%',
+            height: '100px',
+            margin: '0 0 0 10px',
+        },
+        listeners: {
+            keydown: (event) => {
+                if (event.key === 'Enter') {
+                    newComment(projectDoc._id, elNewCommentInput.value, elements.elNutzername.value, Date.now());
+                    elNewCommentInput.value = '';
+                    window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+                }
+            }
+        }
+    });
+    const elNewCommentButton = dom.create({
+        tagName: 'button',
+        content: 'Neuer Kommentar',
+        cssClassName: 'newCommentButton',
+        parent: elContainer,
+        listeners: {
+            click: () => {
+                newComment(projectDoc._id, elNewCommentInput.value, elements.elNutzername.value, Date.now());
+                elNewCommentInput.value = '';
+                window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+            },
+        },
+        styles: {
+            backgroundColor: 'lightblue',
+            color: 'white',
+            cursor: 'pointer',
+            margin: '0 0 0 10px',
+        }
+    });
+    return elContainer;
+} 
+
 const createElProjectPage = (projectDoc, my_project = false) => {
     let elProject = dom.create({
         tagName: 'div',
@@ -179,11 +324,17 @@ const createElProjectPage = (projectDoc, my_project = false) => {
         parent: elProject,
     });
     createElHelferListe(projectDoc, elProject, my_project);
+
+
+
     let elListe = dom.create({
-        tagName: 'p',
+        tagName: 'h3',
         content: "Liste der Materialien: ",
         cssClassName: 'itemTitle',
         parent: elProject,
+        styles: {
+            margin: '20px 0 0 0',
+        }
     });
     let elItems = dom.create({
         tagName: 'ul',
@@ -198,4 +349,6 @@ const createElProjectPage = (projectDoc, my_project = false) => {
             parent: elItems,
         });
     });
+
+    createElCommentList(projectDoc, elProject);
 }
