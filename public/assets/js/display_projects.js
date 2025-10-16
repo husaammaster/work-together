@@ -21,6 +21,13 @@ export const displayProjects = (filter = "") => {
     elProjects.innerHTML = "";
     getProjectsJsonPromise(filter).then(
         projectsJson => {
+            if (projectsJson.docs == undefined) {
+                let elNoProjects = dom.create({
+                    tagName: 'p',
+                    content: 'Keine Projekte für ' + filter + ' gefunden',
+                    parent: elProjects,
+                });
+            }
             projectsJson.map(project => createElProject(project, project.nutzer === elements.elNutzername.value, filter));
         }
     ).catch(

@@ -4,12 +4,14 @@ Projekt für ein Zusammenarbeit und gegenseitige Hilfe.
 
 ## Idee
 
-Ebay Kleinanzeigen, aber statt Objekte, werden hier Projekte angelgt und abgearbeitet.
+Ebay Kleinanzeigen, aber statt Objekte, werden hier Projekte angelgt und von Helfern und Projektleitern abgearbeitet.
 
-Accounts können Projekte erzeugen, Projekte browsen und zu Projekten als Helfer beitreten.
-Projekte haben eine Teilnehmerzahl, Teilnehmerlisten und eine Liste an gebrauchten Gegenständen.
+Accounts können Projekte erzeugen, alle Projekte browsen, eigene Projekte anzeigen und zu Projekten als Helfer beitreten.
+Projekte haben eine Teilnehmerzahl, Teilnehmerlisten und eine Liste an benötigten Gegenständen.
 Zusätzlich haben Projekte eine Liste an Kommentaren.
 Jeder Kommentar hat einen Absender, einen Timestamp und einen Text und ist einem Projekt zugeordnet.
+ 
+Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operationen, nano, JS für Verarbeitung, Logik und Anzeige, CSS für Design 
 
 ## Tech-Stack
 - **chalk** zum leichteren debugging (nicht verwendet)
@@ -60,17 +62,14 @@ Jeder Kommentar hat einen Absender, einen Timestamp und einen Text und ist einem
 
 | Priorität | Feature | Beschreibung | Geschätzte Zeit | Tag |
 |-----------|---------|--------------|-----------------|-----|
-| **MITTEL** | **Projekt bearbeiten** | Edit Funktionalität für eigene Projekte | **1-2h** | **5** |
+| **MITTEL** | **Projekt bearbeiten** | Edit Funktionalität für eigene Projekte | **1-2h** | **6** |
 | **NIEDRIG** | **Styling verbessern** | bessere UX, responsive Design | **1-2h** | **6** |
 | **OPTIONAL** | **React.js Migration** | Frontend auf React umstellen | **8-12h** | - |
 
 
-#### Tag 5 - 8h
+#### To dos
 - Projekt bearbeiten (1-2h)
 - CSS Styling verbessern (1-2h)
-
-#### Tag 6 (letzter Tag) - 8h
-- React Umstellung (8-12h)
 - Word Dokument anfertigen und hochladen
 - Finale Tests & Dokumentation (1-2h)
 

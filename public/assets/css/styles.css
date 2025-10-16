@@ -9,6 +9,16 @@
 
 header {
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    align-items: center; /* Centers vertically */
+
+}
+
+.header-top-line {
+    width:100%;
+    display: flex;
     justify-content: space-between;
 }
 
