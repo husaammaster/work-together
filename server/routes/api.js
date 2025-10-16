@@ -131,7 +131,7 @@ server.post("/project_page", (request, response) => {
   projectsDB.get(_id)
     .then(
       result => {
-        console.log("\nServer: Projektseite von _id: ", _id , "gelesen: ")
+        console.log("\nServer: Projektseite von _id: ", _id , "gelesen: ", result.docs)
         response.json(result)
       }
     ).catch(console.warn);
@@ -155,7 +155,7 @@ server.post("/helper_list", (request, response) => {
     }
   }).then(
     result => {
-      console.log("\nServer: Helferliste von Projekt " + proj_id + " gelesen: ")
+      console.log("\nServer: Helferliste von Projekt " + proj_id + " gelesen: ", result.docs)
       response.json(result)
     }
   ).catch(console.warn);
@@ -274,7 +274,7 @@ server.post("/comment_list", (request, response) => {
     }
   }).then(
     result => {
-      console.log("\nServer: Kommentarliste von Projekt " + proj_id + " erhalten: ", result)
+      console.log("\nServer: Kommentarliste von Projekt " + proj_id + " gelesen: ", result.docs)
       response.json(result)
     }
   ).catch(console.warn); 

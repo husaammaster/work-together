@@ -27,20 +27,18 @@ getProjectByIdPromise(projectId).then(project => {
 const createElHelferListe = (projectDoc, parent, my_project = false) => {
     const elContainer = dom.create({
         tagName: 'div',
-        cssClassName: 'helferliste',
+        cssClassName: 'helper-list',
         parent: parent,
-        styles: {
-            margin: '20px 0 0 0',
-        }
     });
     const elTitle = dom.create({
         tagName: 'h3',
         content: 'Helferliste',
+        cssClassName: 'helper-list__title',
         parent: elContainer,
     });
     const elListe = dom.create({
         tagName: 'ul',
-        cssClassName: 'helferliste',
+        cssClassName: 'helper-list__items',
         parent: elContainer,
     });
     projectDoc.helfer = getHelperList(projectDoc._id)
@@ -49,14 +47,14 @@ const createElHelferListe = (projectDoc, parent, my_project = false) => {
             const elItem = dom.create({
                 tagName: 'li',
                 content: helfer.helper,
-                cssClassName: 'helfer',
+                cssClassName: 'helper-list__item',
                 parent: elListe,
             });
             if (helfer.helper === elements.elNutzername.value) {
                 const elDeleteButton = dom.create({
                     tagName: 'button',
                     content: 'Verlassen',
-                    cssClassName: 'verlassen',
+                    cssClassName: 'button button--leave',
                     parent: elItem,
                     listeners: {
                         click: () => {
@@ -64,12 +62,6 @@ const createElHelferListe = (projectDoc, parent, my_project = false) => {
                             window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
                         }
                     },
-                    styles: {
-                        backgroundColor: 'coral',
-                        margin: '0 0 0 10px',
-                        color: 'white',
-                        cursor: 'pointer',
-                    }
                 });
             }
 
@@ -82,14 +74,14 @@ const createElHelferListe = (projectDoc, parent, my_project = false) => {
                 color = "orange"
             else if (result.docs.length > projectDoc.maxHelpers)
                 color = "lightgray"
-            document.querySelector('.maxHelpers').innerHTML = "Anzahl gesuchter Helfer: "  + result.docs.length + " / " + projectDoc.maxHelpers;
-            document.querySelector('.maxHelpers').style.color = color;
+            document.querySelector('.project__helper-count').innerHTML = "Anzahl gesuchter Helfer: "  + result.docs.length + " / " + projectDoc.maxHelpers;
+            document.querySelector('.project__helper-count').style.color = color;
         })
         if (!my_project) {
             const elBeitreten = dom.create({
                 tagName: 'button',
                 content: 'Beitreten',
-                cssClassName: 'beitreten',
+                cssClassName: 'button button--join',
                 parent: elListe,
                 listeners: {
                     click: () => {
@@ -97,11 +89,6 @@ const createElHelferListe = (projectDoc, parent, my_project = false) => {
                         window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
                     }
                 },
-                styles: {
-                    backgroundColor: 'lightblue',
-                    color: 'white',
-                    cursor: 'pointer',
-                }
             });
         }
     });
@@ -112,22 +99,19 @@ const createElHelferListe = (projectDoc, parent, my_project = false) => {
 const createElCommentList = (projectDoc, elProject) => {
     const elContainer = dom.create({
         tagName: 'div',
-        cssClassName: 'commentListContainer',
+        cssClassName: 'comment-list',
         parent: elProject,
-        styles: {
-            margin: '20px 0 0 0',
-        }
     });
     const elTitle = dom.create({
         tagName: 'h3',
         content: 'Kommentare',
-        cssClassName: 'commentListTitle',
+        cssClassName: 'comment-list__title',
         parent: elContainer,
     }); 
 
     const elCommentList = dom.create({
         tagName: 'ul',
-        cssClassName: 'commentList',
+        cssClassName: 'comment-list__items',
         parent: elContainer,
     });
     projectDoc.comments = getCommentList(projectDoc._id)
@@ -135,33 +119,26 @@ const createElCommentList = (projectDoc, elProject) => {
         result.docs.map(comment => {
             const elItem = dom.create({
                 tagName: 'li',
-                cssClassName: 'comment',
+                cssClassName: 'comment-list__item',
                 parent: elCommentList,
             });
             const elHeader = dom.create({
                 tagName: 'div',
-                cssClassName: 'commentHeader',
+                cssClassName: 'comment-list__item-header',
                 parent: elItem,
-                styles: {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                }
             });
             const elUser = dom.create({
                 tagName: 'p',
                 content: comment.user,
+                cssClassName: 'comment-list__user',
                 parent: elHeader,
-                styles: {
-                    color: 'gray',
-                    fontWeight: 'bold',
-                }
             }); 
 
             if (comment.user === elements.elNutzername.value) {
                 const elDeleteButton = dom.create({
                     tagName: 'button',
                     content: 'Löschen',
-                    cssClassName: 'deleteComment',
+                    cssClassName: 'button button--delete',
                     parent: elHeader,
                     listeners: {
                         click: () => {
@@ -169,56 +146,34 @@ const createElCommentList = (projectDoc, elProject) => {
                             window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
                         }
                     },
-                    styles: {
-                        backgroundColor: 'coral',
-                        margin: '0 0 0 10px',
-                        color: 'white',
-                        cursor: 'pointer',
-                    }
                 });
             }
             if (comment.user == projectDoc.nutzer) {
                 const elOwnerBadge = dom.create({
                     tagName: 'span',
                     content: 'Projektleiter',
-                    cssClassName: 'ownerBadge',
+                    cssClassName: 'comment-list__owner-badge',
                     parent: elHeader,
-                    styles: {
-                        backgroundColor: 'lightblue',
-                        color: 'white',
-                        borderRadius: '5px',
-                        padding: '2px 5px',
-                    }
                 });
             }
             const elTimestamp = dom.create({
                 tagName: 'p',
                 content: new Date(comment.timestamp).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }),
+                cssClassName: 'comment-list__timestamp',
                 parent: elHeader,
-                styles: {
-                    color: 'gray',
-                    fontWeight: 'bold',
-                }
             });
             const elComment = dom.create({
                 tagName: 'p',
                 content: comment.comment,
+                cssClassName: 'comment-list__content',
                 parent: elItem,
-                styles: {
-                    margin: '0 0 0 10px',
-                }
             });
         })
     })
     const elNewCommentInput = dom.create({
         tagName: 'textarea',
-        cssClassName: 'newCommentInput',
+        cssClassName: 'comment-list__input',
         parent: elContainer,
-        styles: {
-            width: '80%',
-            height: '100px',
-            margin: '0 0 0 10px',
-        },
         listeners: {
             keydown: (event) => {
                 if (event.key === 'Enter') {
@@ -232,7 +187,7 @@ const createElCommentList = (projectDoc, elProject) => {
     const elNewCommentButton = dom.create({
         tagName: 'button',
         content: 'Neuer Kommentar',
-        cssClassName: 'newCommentButton',
+        cssClassName: 'button button--submit',
         parent: elContainer,
         listeners: {
             click: () => {
@@ -241,12 +196,6 @@ const createElCommentList = (projectDoc, elProject) => {
                 window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
             },
         },
-        styles: {
-            backgroundColor: 'lightblue',
-            color: 'white',
-            cursor: 'pointer',
-            margin: '0 0 0 10px',
-        }
     });
     return elContainer;
 } 
@@ -259,47 +208,33 @@ const createElProjectPage = (projectDoc, my_project = false) => {
     });
     let elHeader = dom.create({
         tagName: 'div',
-        styles: {
-            display: 'flex',
-            justifyContent: 'space-between',
-        },
+        cssClassName: 'project__header',
         parent: elProject,
     });
     let elLink = dom.create({
         tagName: 'a',
+        cssClassName: 'project__link',
         href: `project_page.html?id=${projectDoc._id}&nutzer=${elements.elNutzername.value}`,
-        styles: {
-            cursor: 'pointer',
-            textDecoration: 'none',
-            color: 'inherit'
-        },
         parent: elHeader,
     });
     let elTitle = dom.create({
         tagName: 'h2',
         content: projectDoc.proj_name,
-        cssClassName: 'title',
+        cssClassName: 'project__title',
         parent: elLink,
     });
 
-    let my_style = {}
-    if (my_project) {
-        my_style = {
-            backgroundColor: 'lightblue',
-        }
-    }
     let elUser = dom.create({
         tagName: 'h5',
         content: "Projekt von: " + projectDoc.nutzer,
-        cssClassName: 'user',
+        cssClassName: 'project__user' + (my_project ? ' project__user--owner' : ''),
         parent: elHeader,
-        styles: my_style,
     });
     if (my_project) {
         let elDeleteButton = dom.create({
             tagName: 'button',
             content: "Löschen und zurück zu Home",
-            cssClassName: 'del_project',
+            cssClassName: 'button button--delete',
             parent: elHeader,
             listeners: {
                 click: () => {deleteProject(projectDoc._id, projectDoc._rev).then(
@@ -314,13 +249,13 @@ const createElProjectPage = (projectDoc, my_project = false) => {
     let elDescription = dom.create({
         tagName: 'p',
         content: projectDoc.description,
-        cssClassName: 'description',
+        cssClassName: 'project__description',
         parent: elProject,
     });
     let elMaxHelpers = dom.create({
         tagName: 'p',
         content: "Anzahl gesuchter Helfer: " + projectDoc.maxHelpers,
-        cssClassName: 'maxHelpers',
+        cssClassName: 'project__helper-count',
         parent: elProject,
     });
     createElHelferListe(projectDoc, elProject, my_project);
@@ -330,22 +265,19 @@ const createElProjectPage = (projectDoc, my_project = false) => {
     let elListe = dom.create({
         tagName: 'h3',
         content: "Liste der Materialien: ",
-        cssClassName: 'itemTitle',
+        cssClassName: 'project__materials-title',
         parent: elProject,
-        styles: {
-            margin: '20px 0 0 0',
-        }
     });
     let elItems = dom.create({
         tagName: 'ul',
-        cssClassName: 'itemList',
+        cssClassName: 'project__materials-list',
         parent: elProject,
     });
     projectDoc.items.map(item => {
         let elItem = dom.create({
             tagName: 'li',
             content: item,
-            cssClassName: 'item',
+            cssClassName: 'project__material-item',
             parent: elItems,
         });
     });

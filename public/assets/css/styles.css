@@ -1,3 +1,78 @@
+/*
+================================================================================
+  CSS NAMING CONVENTION - BEM (Block Element Modifier)
+================================================================================
+
+This stylesheet follows the BEM (Block Element Modifier) methodology with 
+kebab-case naming convention for consistent, scalable, and maintainable CSS.
+
+--- STRUCTURE ---
+
+1. BLOCK: Standalone component that is meaningful on its own
+   Format: .block-name
+   Example: .project, .helper-list, .comment-list, .button
+
+2. ELEMENT: Part of a block that has no standalone meaning
+   Format: .block-name__element-name
+   Example: .project__title, .helper-list__item, .comment-list__user
+
+3. MODIFIER: Variation or state of a block or element
+   Format: .block-name--modifier-name or .block-name__element--modifier-name
+   Example: .button--delete, .project__user--owner
+
+--- NAMING RULES ---
+
+• Use kebab-case for all class names (lowercase with hyphens)
+• Use double underscores (__) to separate block from element
+• Use double hyphens (--) to separate block/element from modifier
+• Keep names semantic and descriptive
+• Avoid abbreviations unless universally understood
+
+--- MAIN BLOCKS IN THIS PROJECT ---
+
+.project                    - Project card component
+  .project__header          - Header section with title and user info
+  .project__link            - Link wrapper for title
+  .project__title           - Project title (h2, h4)
+  .project__user            - User information
+  .project__user--owner     - Owner variation of user info
+  .project__description     - Project description text
+  .project__helper-count    - Helper count display
+  .project__comment-count   - Comment count display
+  .project__materials-title - Materials section title
+  .project__materials-list  - List of materials (ul)
+  .project__material-item   - Individual material item (li)
+
+.helper-list                - Helper list component
+  .helper-list__title       - Helper list title
+  .helper-list__items       - List container (ul)
+  .helper-list__item        - Individual helper item (li)
+
+.comment-list               - Comment list component
+  .comment-list__title      - Comment list title
+  .comment-list__items      - List container (ul)
+  .comment-list__item       - Individual comment item (li)
+  .comment-list__item-header - Header of comment item
+  .comment-list__user       - Comment author name
+  .comment-list__timestamp  - Comment timestamp
+  .comment-list__owner-badge - Badge for project owner
+  .comment-list__content    - Comment text content
+  .comment-list__input      - New comment textarea
+
+.button                     - Button component
+  .button--primary          - Primary action button
+  .button--delete           - Delete action button
+  .button--join             - Join action button
+  .button--leave            - Leave action button
+  .button--submit           - Submit action button
+
+.message                    - Message/notification component
+  .message--success         - Success message
+  .message--error           - Error message
+
+================================================================================
+*/
+
 /* --- General Reset & Body Styles --- */
 * {
     margin: 0;
@@ -128,54 +203,90 @@ main h3 {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.project .title {
+/* Project Header */
+.project__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.project__link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.project__link:hover .project__title {
+    color: #0056b3;
+}
+
+.project__title {
     font-size: 1.25rem;
     font-weight: 600;
     color: #007bff;
     margin-bottom: 0.25rem;
+    transition: color 0.2s ease;
 }
 
-.project .user {
+.project__user {
     font-size: 0.9rem;
     color: #6c757d;
     margin-bottom: 1rem;
 }
 
-.project .description {
+.project__user--owner {
+    background-color: #c6e3ff;
+    color: #0056b3;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.project__description {
     margin-bottom: 1rem;
+    line-height: 1.6;
+    color: #333;
 }
 
-.project .listTitle {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.project ul {
-    list-style-type: none; /* Remove default bullets */
-    margin-bottom: 1rem;
-}
-
-.project li {
-    position: relative;
-    padding-left: 1.5rem; /* Space for custom bullet */
-    margin-bottom: 0.25rem;
-}
-
-.project li::before {
-    content: '✓'; /* Custom bullet */
-    position: absolute;
-    left: 0;
-    color: #007bff;
-    font-weight: bold;
-}
-
-.numComments, .maxHelpers {
+.project__helper-count,
+.project__comment-count {
     font-size: 0.9rem;
-    color: #6c757d;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-top: 0.5rem;
+}
+
+.project__materials-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    color: #333;
+}
+
+.project__materials-list {
+    list-style-type: none;
+    margin-bottom: 1rem;
+    padding: 0;
+}
+
+.project__material-item {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.project__material-item::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #007bff;
+    font-weight: bold;
 }
 
 
@@ -187,27 +298,195 @@ main h3 {
 }
 
 /* --- Button Styles --- */
-.del_project {
-    background-color: #dc3545;
-    color: white;
+.button {
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
-    transition: background-color 0.2s ease;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
 }
 
-.del_project:hover {
+.button:hover {
+    transform: translateY(-1px);
+}
+
+.button:active {
+    transform: translateY(0);
+}
+
+.button--primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.button--primary:hover {
+    background-color: #0056b3;
+}
+
+.button--delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.button--delete:hover {
     background-color: #c82333;
 }
 
-.owning-user {
-    background-color: #c6e3ff; /* Light blue background */
-    color: #0056b3;           /* Darker blue text for contrast */
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;      /* Pill shape */
+.button--join {
+    background-color: #28a745;
+    color: white;
+}
+
+.button--join:hover {
+    background-color: #218838;
+}
+
+.button--leave {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.button--leave:hover {
+    background-color: #e0a800;
+}
+
+.button--submit {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.button--submit:hover {
+    background-color: #138496;
+}
+
+/* --- Helper List Styles --- */
+.helper-list {
+    margin-top: 1.5rem;
+}
+
+.helper-list__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #333;
+}
+
+.helper-list__items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.helper-list__item {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid #007bff;
+}
+
+/* --- Comment List Styles --- */
+.comment-list {
+    margin-top: 2rem;
+}
+
+.comment-list__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.comment-list__items {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+}
+
+.comment-list__item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #007bff;
+}
+
+.comment-list__item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.comment-list__user {
+    font-weight: 600;
+    color: #007bff;
+    margin: 0;
+}
+
+.comment-list__timestamp {
     font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.comment-list__owner-badge {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.comment-list__content {
+    margin: 0.5rem 0 0 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.comment-list__input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.comment-list__input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* --- Message Styles --- */
+.message {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
     font-weight: 500;
-    display: inline-block;    /* Ensures padding is applied correctly */
+}
+
+.message--success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message--error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }

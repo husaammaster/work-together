@@ -89,6 +89,7 @@ export const getProjectByIdPromise = (_id) => {
 
 export const getHelperList = (proj_id) => {
     let result = undefined;
+    console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert')
     return fetch('/helper_list', {
         method: 'post',
         headers: {
@@ -99,7 +100,7 @@ export const getHelperList = (proj_id) => {
     .then(result => result.json())
     .then(data => {
         result = data; 
-        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', result)
+        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', result.docs)
         return result;
     })
 }
@@ -114,7 +115,7 @@ export const joinProject = (proj_id, helper) => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', data)
+        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', data.docs)
         return data;
     })
 }
@@ -129,7 +130,7 @@ export const leaveProject = (proj_id, helper) => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', data)
+        console.log('\nClient: Helferliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', data.docs)
         return data;
     })
 }
@@ -151,7 +152,7 @@ export const getCommentList = (proj_id) => {
     .then(result => result.json())
     .then(data => {
         result = data; 
-        console.log('\nClient: Kommentarliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', result)
+        console.log('\nClient: Kommentarliste mit Proj_ID ' + proj_id + ' angefordert -> result: ', result.docs)
         return result;
     })
 }

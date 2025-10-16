@@ -36,26 +36,19 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     });
     let elHeader = dom.create({
         tagName: 'div',
-        styles: {
-            display: 'flex',
-            justifyContent: 'space-between',
-        },
+        cssClassName: 'project__header',
         parent: elProject,
     });
     let elLink = dom.create({
         tagName: 'a',
+        cssClassName: 'project__link',
         href: `project_page.html?id=${projectDoc._id}&nutzer=${elements.elNutzername.value}`,
-        styles: {
-            cursor: 'pointer',
-            textDecoration: 'none',
-            color: 'inherit'
-        },
         parent: elHeader,
     });
     let elTitle = dom.create({
         tagName: 'h4',
         content: projectDoc.proj_name,
-        cssClassName: 'title',
+        cssClassName: 'project__title',
         parent: elLink,
     });
 
@@ -63,14 +56,14 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     let elUser = dom.create({
         tagName: 'h5',
         content: "Projekt von: " + projectDoc.nutzer,
-        cssClassName: 'user' + (my_project ? ' owning-user' : ''),
+        cssClassName: 'project__user' + (my_project ? ' project__user--owner' : ''),
         parent: elHeader,
     });
     if (my_project) {
         let elDeleteButton = dom.create({
             tagName: 'button',
             content: "Löschen",
-            cssClassName: 'del_project',
+            cssClassName: 'button button--delete',
             parent: elHeader,
             listeners: {
                 click: () => {deleteProject(projectDoc._id, projectDoc._rev).then(
@@ -85,7 +78,7 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     let elDescription = dom.create({
         tagName: 'p',
         content: projectDoc.description,
-        cssClassName: 'description',
+        cssClassName: 'project__description',
         parent: elProject,
     });
     getHelperList(projectDoc._id)
@@ -102,29 +95,29 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
         let elMaxHelpers = dom.create({
             tagName: 'p',
             content: "Anzahl gesuchter Helfer: " + result.docs.length + " / " + projectDoc.maxHelpers,
-            cssClassName: 'maxHelpers',
-            parent: elProject,
+            cssClassName: 'project__helper-count',
             styles: {
                 color: color,
             },
+            parent: elProject,
         })}
     )
     let elListe = dom.create({
         tagName: 'p',
         content: "Liste der Materialien: ",
-        cssClassName: 'listTitle',
+        cssClassName: 'project__materials-title',
         parent: elProject,
     });
     let elItems = dom.create({
         tagName: 'ul',
-        cssClassName: 'listItems',
+        cssClassName: 'project__materials-list',
         parent: elProject,
     });
     projectDoc.items.map(item => {
         let elItem = dom.create({
             tagName: 'li',
             content: item,
-            cssClassName: 'item',
+            cssClassName: 'project__material-item',
             parent: elItems,
         });
     });
@@ -141,7 +134,7 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
             let elNumComments = dom.create({
                 tagName: 'p',
                 content: "Anzahl Kommentare: " + result.docs.length + " " + bootstrap_comment_icon,
-                cssClassName: 'numComments',
+                cssClassName: 'project__comment-count',
                 parent: elProject,
             });
         }

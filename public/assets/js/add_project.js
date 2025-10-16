@@ -30,7 +30,7 @@ const send = evnt => {
                 dom.create({
                     tagName: 'p',
                     content: 'Projekt angelegt: ' + projectDoc.proj_name,
-                    cssClassName: 'project',
+                    cssClassName: 'message message--success',
                     parent: elements.elMain,
                 });
             });
@@ -39,7 +39,7 @@ const send = evnt => {
         dom.create({
             tagName: 'p',
             content: 'Fehler: ' + err.message,
-            cssClassName: 'error',
+            cssClassName: 'message message--error',
             parent: elements.elMain,
         });
     });

@@ -34,6 +34,7 @@ const addAllProjects = () => {
 dom.create({
     tagName: 'button',
     content: 'Add all projects',
+    cssClassName: 'button button--primary',
     parent: elements.elMain,
     listeners: {
         click: addAllProjects
