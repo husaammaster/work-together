@@ -137,7 +137,33 @@ server.post("/project_page", (request, response) => {
     ).catch(console.warn);
 })
 
-
+server.post("/update_project", (request, response) => {
+  console.log("\nServer: Projekt aktualisiert angefordert");
+  const projectsDB = dbScope.use(dbNames.a_projects);
+  const _id = request.body.proj_id;
+  const _rev = request.body._rev;
+  const proj_name = request.body.proj_name;
+  const nutzer = request.body.nutzer;
+  const description = request.body.description;
+  const maxHelpers = request.body.maxHelpers;
+  const items = request.body.items;
+  console.log("\nServer: Projekt aktualisiert angefordert: ", _id, _rev, proj_name, nutzer, description, maxHelpers, items);
+  projectsDB.insert({
+    _id,
+    _rev,
+    proj_name,
+    nutzer,
+    description,
+    maxHelpers,
+    items
+  })
+    .then(console.log("\nServer: Projekt aktualisiert: ", _id, proj_name, description, maxHelpers, items))
+    .then(
+      () => response.json({ success: true, message: "Projekt aktualisiert" })
+    )
+    .catch(console.warn);
+})
+          
 
 
 // =====HELPERLISTE=====
@@ -186,7 +212,7 @@ server.post("/join_project", (request, response) => {
       projectHelpersDB.insert({proj_id, helper})
     .then(console.log("\nServer: Join Helferliste von Projekt " + proj_id + " angefordert"))
     .then(
-      () => response.json({ success: true, message: "Projekt angelegt" })
+      () => response.json({ success: true, message: "Helfer " + helper + " hinzugefügt" })
     )
     .catch(console.warn)
     }
@@ -219,7 +245,7 @@ server.post("/leave_project", (request, response) => {
     })
     .then(console.log("\nServer: Eintrag " + helper + " von Projekt " + proj_id + " entfernt"))
     .then(
-      () => response.json({ success: true, message: "Projekt angelegt" })
+      () => response.json({ success: true, message: "Helfer " + helper + " entfernt" })
     )
     .catch(console.warn);
 })
@@ -242,7 +268,7 @@ server.post("/new_comment", (request, response) => {
   commentsDB.insert(comment)
     .then(result => console.log("\nServer: Neuer Kommentar angefordert: ", result))
     .then(
-      () => response.json({ success: true, message: "Projekt angelegt" })
+      () => response.json({ success: true, message: "Kommentar hinzugefügt" })
     )
     .catch(console.warn); 
 })
@@ -256,7 +282,7 @@ server.post("/delete_comment", (request, response) => {
   commentsDB.destroy(comment_id, comment_rev)
     .then(console.log("\nServer: Kommentar löschen erfolgreich: ", comment_id, comment_rev))
     .then(
-      () => response.json({ success: true, message: "Projekt angelegt" })
+      () => response.json({ success: true, message: "Kommentar entfernt" })
     )
     .catch(console.warn); 
 })

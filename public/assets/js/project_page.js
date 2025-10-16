@@ -258,6 +258,17 @@ const createElProjectPage = (projectDoc, my_project = false) => {
             }
         });
     }
+    if (my_project) {
+        let elEditButton = dom.create({
+            tagName: 'button',
+            content: "Bearbeiten",
+            cssClassName: 'button button--edit',
+            parent: elHeader,
+            listeners: {
+                click: () => {window.location.href = `edit_project.html?id=${projectDoc._id}&nutzer=${elements.elNutzername.value}`}
+            }
+        });
+    }
     let elDescription = dom.create({
         tagName: 'p',
         content: projectDoc.description,

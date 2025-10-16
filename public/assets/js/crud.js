@@ -46,6 +46,28 @@ export const createProject = ({
     });
 }
 
+export const updateProject = ({
+        proj_id,
+        _rev,
+        proj_name,
+        nutzer,
+        description,
+        maxHelpers,
+        items}) => {
+    return fetch('/update_project', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'  // ← ADD THIS
+        },
+        body: JSON.stringify({proj_id, _rev, proj_name, nutzer, description, maxHelpers, items})
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('\nClient: Projekt wurde erfolgreich aktualisiert -> result: ', data);
+        return data;
+    });
+}
+
 export const getProjectsJsonPromise = (filter) => {
     let result = undefined;
     return fetch('/projects', {

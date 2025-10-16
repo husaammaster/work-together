@@ -332,6 +332,15 @@ main h3 {
     background-color: #c82333;
 }
 
+.button--edit {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.button--edit:hover {
+    background-color: #e0a800;
+}
+
 .button--join {
     background-color: #28a745;
     color: white;

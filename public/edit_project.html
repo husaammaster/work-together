@@ -26,10 +26,14 @@
         </nav>
     </header>
     <main>
-        <form id="edit_project_form">
+        <form id="add_project_form">
             <div>
                 <label for="proj_name">Projektname:</label>
                 <input type="text" id="proj_name" name="proj_name" value="a3">
+            </div>
+            <div>
+                <label for="proj_owner">Produktleiter (ändern übergibt Projekt an anderen Nutzer):</label>
+                <input type="text" id="proj_owner" name="proj_owner" value="Max Mustermann">
             </div>
             
             <div>
@@ -47,7 +51,7 @@
                 <textarea id="items" name="items">d1, d2, d3, d4</textarea>
             </div>
 
-            <button type="submit">änderungen Speichern</button>
+            <button type="submit" id="submit_button">änderungen Speichern</button>
         </form>
     </main>
     <footer>
