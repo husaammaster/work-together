@@ -21,13 +21,6 @@ export const displayProjects = (filter = "") => {
     elProjects.innerHTML = "";
     getProjectsJsonPromise(filter).then(
         projectsJson => {
-            if (projectsJson.docs == undefined) {
-                let elNoProjects = dom.create({
-                    tagName: 'p',
-                    content: 'Keine Projekte für ' + filter + ' gefunden',
-                    parent: elProjects,
-                });
-            }
             projectsJson.map(project => createElProject(project, project.nutzer === elements.elNutzername.value, filter));
         }
     ).catch(
@@ -67,17 +60,11 @@ const createElProject = (projectDoc, my_project = false, filter = "") => {
     });
 
     let my_style = {}
-    if (my_project) {
-        my_style = {
-            backgroundColor: 'lightblue',
-        }
-    }
     let elUser = dom.create({
         tagName: 'h5',
         content: "Projekt von: " + projectDoc.nutzer,
-        cssClassName: 'user',
+        cssClassName: 'user' + (my_project ? ' owning-user' : ''),
         parent: elHeader,
-        styles: my_style,
     });
     if (my_project) {
         let elDeleteButton = dom.create({

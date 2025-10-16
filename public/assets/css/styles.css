@@ -1,58 +1,213 @@
+/* --- General Reset & Body Styles --- */
 * {
-    margin: 4px 0 4px 0;
-    padding: 1px 10px ;
-    border-radius: 10px;
-    border: 1px dotted darkgray;
-    color: black;
-    background-color: rgba(255,255,255, 0.4);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 2rem 1rem; /* Add some padding for smaller screens */
+}
+
+/* --- Main Layout Container --- */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --- Header Styles --- */
 header {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    align-items: center; /* Centers vertically */
-
+    background-color: #ffffff;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
 }
 
 .header-top-line {
-    width:100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
-body { 
-    background-color: gray; 
-    max-width: min(800px, 80%);
-    margin: auto;
+.header-top-line h1 {
+    font-size: 1.75rem;
+    color: #007bff;
 }
 
+.header-top-line div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#nutzername {
+    border: 1px solid #a5aab0;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+nav {
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid #a5aab0;
+    padding-top: 1rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #007bff;
+    transition: width 0.3s ease;
+}
+
+nav a:hover {
+    color: #007bff;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+
+/* --- Main Content Area --- */
 main {
-    max-height: 80vh;
-    overflow-y: scroll;
+    background-color: transparent; /* Main is now a layout container */
 }
 
 main h3 {
     position: sticky;
     top: 0;
-    z-index: 1;
+    background-color: #f0f2f5; /* Match body background */
+    padding: 1rem 0;
+    z-index: 10;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
 }
 
+#projects {
+    display: grid;
+    gap: 1.5rem;
+}
+
+/* --- Project Card Styles --- */
+.project {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.project:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.project .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #007bff;
+    margin-bottom: 0.25rem;
+}
+
+.project .user {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.project .description {
+    margin-bottom: 1rem;
+}
+
+.project .listTitle {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.project ul {
+    list-style-type: none; /* Remove default bullets */
+    margin-bottom: 1rem;
+}
+
+.project li {
+    position: relative;
+    padding-left: 1.5rem; /* Space for custom bullet */
+    margin-bottom: 0.25rem;
+}
+
+.project li::before {
+    content: '✓'; /* Custom bullet */
+    position: absolute;
+    left: 0;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.numComments, .maxHelpers {
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+
+/* --- Form Styles --- */
 #add_project_form {
     display: flex;
     flex-direction: column;
-    }
+    gap: 1rem;
+}
 
+/* --- Button Styles --- */
 .del_project {
-    background-color: coral;
+    background-color: #dc3545;
     color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
 }
 
-div+.project {
-    margin-top: 20px;
+.del_project:hover {
+    background-color: #c82333;
 }
 
-li {
-    margin-left: 20px;
+.owning-user {
+    background-color: #c6e3ff; /* Light blue background */
+    color: #0056b3;           /* Darker blue text for contrast */
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;      /* Pill shape */
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;    /* Ensures padding is applied correctly */
 }
