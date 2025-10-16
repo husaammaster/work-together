@@ -86,7 +86,8 @@ body {
     color: #333333;
     line-height: 1.6;
     margin: 0;
-    padding: 2rem 1rem; /* Add some padding for smaller screens */
+    padding: 2rem 1rem; /* Add some padding for smaller screens */;
+    margin-bottom: 100vh;
 }
 
 /* --- Main Layout Container --- */

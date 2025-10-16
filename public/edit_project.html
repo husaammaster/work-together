@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helpers - Projekt bearbeiten</title>
+    
+	<link rel="stylesheet" href="./assets/css/styles.css">  
+    <link rel="stylesheet" href="./assets/css/form.css">
+    <script src = "assets/js/edit_project.js" type="module" defer></script>
+</head>
+<body>
+    <header>
+        <div class="header-top-line">
+            <h1>Helpers</h1>
+            <div>
+                <label for="nutzername">Nutzername</label>
+                <input type="text" id="nutzername" name="nutzername" value="Max Mustermann">
+            </div>
+        </div>
+        
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="add_project.html">Neues Projekt</a>
+            <a href="my_projects.html">Meine Projekte</a>
+        </nav>
+    </header>
+    <main>
+        <form id="edit_project_form">
+            <div>
+                <label for="proj_name">Projektname:</label>
+                <input type="text" id="proj_name" name="proj_name" value="a3">
+            </div>
+            
+            <div>
+                <label for="description">Projektbeschreibung:</label>
+                <textarea id="description" name="description">b1</textarea>
+            </div>
+
+            <div>
+                <label for="maxHelpers">Maximale Anzahl an Helfern:</label>
+                <input type="number" id="maxHelpers" name="maxHelpers" value="3">
+            </div>
+
+            <div>
+                <label for="items">Materialien (mit Komma getrennt):</label>
+                <textarea id="items" name="items">d1, d2, d3, d4</textarea>
+            </div>
+
+            <button type="submit">änderungen Speichern</button>
+        </form>
+    </main>
+    <footer>
+        <p>© 2025 Helpers</p>
+    </footer>
+
+</body>
+</html>

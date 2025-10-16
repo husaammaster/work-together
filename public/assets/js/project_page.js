@@ -142,8 +142,12 @@ const createElCommentList = (projectDoc, elProject) => {
                     parent: elHeader,
                     listeners: {
                         click: () => {
-                            deleteComment(comment._id, comment._rev);
-                            window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+                            deleteComment(comment._id, comment._rev)
+                            .then(() => {
+                                elContainer.innerHTML = '';
+                                createElCommentList(projectDoc, elProject);
+                            });
+                            // window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
                         }
                     },
                 });
@@ -177,9 +181,13 @@ const createElCommentList = (projectDoc, elProject) => {
         listeners: {
             keydown: (event) => {
                 if (event.key === 'Enter') {
-                    newComment(projectDoc._id, elNewCommentInput.value, elements.elNutzername.value, Date.now());
+                    newComment(projectDoc._id, elNewCommentInput.value, elements.elNutzername.value, Date.now())
+                    .then(() => {
+                        elContainer.innerHTML = '';
+                        createElCommentList(projectDoc, elProject);
+                    });
                     elNewCommentInput.value = '';
-                    window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+                    // window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
                 }
             }
         }
@@ -191,9 +199,13 @@ const createElCommentList = (projectDoc, elProject) => {
         parent: elContainer,
         listeners: {
             click: () => {
-                newComment(projectDoc._id, elNewCommentInput.value, elements.elNutzername.value, Date.now());
+                newComment(projectDoc._id, elNewCommentInput.value, elements.elNutzername.value, Date.now())
+                .then(() => {
+                    elContainer.innerHTML = '';
+                    createElCommentList(projectDoc, elProject);
+                });
                 elNewCommentInput.value = '';
-                window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
+                // window.location.href = `project_page.html?id=${projectId}&nutzer=${elements.elNutzername.value}`;
             },
         },
     });
