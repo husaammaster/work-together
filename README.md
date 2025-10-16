@@ -38,13 +38,15 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 ### Projekte
 - Projekt-Übersicht (`index.html`)
 - Projekt erstellen Seite (`add_project.html`)
+- Projekt bearbeiten Seite (`edit_project.html`)
 - Projekte nach Nutzer filtern Seite (`my_projects.html`)
 - Klickbare Projekt-Titel führen zur Detailseite (`project_page.html`)
 - Projekt-Detailseite mit URL-Parametern (`project_page.html?id=....`)
 - Projekt löschen (Delete mit _id und _rev)
-- Eigene Projekte visuell hervorheben (lightblue Name)
-- Delete-Button nur für eigene Projekte
-- CRUD-Operationen für Projekte (Create, Read, Delete)
+- Projekt aktualisieren (Update mit _id und _rev)
+- Eigene Projekte visuell hervorheben (Owner-Badge)
+- Edit/Delete-Buttons nur für eigene Projekte
+- **Vollständige CRUD-Operationen für Projekte (Create, Read, Update, Delete)**
 
 ### Helfer
 - Helfer-System Backend (join_project, leave_project, helper_list)
@@ -56,18 +58,10 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 - Kommentar-System Backend (new_comment, comment_list, delete_comment)
 - Kommentar-System Frontend (Kommentar-Formular, Kommentar-Liste, Timestamp, Projektleiter-Badge)
 - Kommentar-Anzahl-Badge auf Übersichtsseite
+- Dynamisches Hinzufügen/Löschen ohne Page-Reload
 - CRUD-Operationen für Kommentare (Create, Read, Delete)
 
-## Feature Roadmap - Verbleibende 2 Tage
 
-| Priorität | Feature | Beschreibung | Geschätzte Zeit | Tag |
-|-----------|---------|--------------|-----------------|-----|
-| **Optional** | **Projekt bearbeiten** | Edit Funktionalität für eigene Projekte | **1-2h** | **6** |
-
-
-#### To dos
-- Projekt bearbeiten (1-2h)
-- Word Dokument anfertigen und hochladen
 
 
 ## Datenbank-Schema
@@ -85,6 +79,7 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 ### Projekte
 - `POST /projects` - Alle Projekte oder gefiltert nach Nutzer
 - `POST /new_project` - Neues Projekt erstellen
+- `POST /update_project` - Projekt aktualisieren (mit _id und _rev)
 - `POST /delete_project` - Projekt löschen
 - `POST /project_page` - Einzelnes Projekt abrufen
 - `POST /processProjectForm` - Formular-Daten verarbeiten
@@ -99,8 +94,6 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 - `POST /new_comment` - Kommentar hinzufügen
 - `POST /delete_comment` - Kommentar löschen
 
-### Noch zu implementieren
-- `POST /edit_project` - Projekt bearbeiten
 
 ## Installation & Start
 
