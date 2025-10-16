@@ -2,3 +2,4 @@
 /.idea/
 /server/datenbanken/credentials.json
 
+**/*.DS_Store
