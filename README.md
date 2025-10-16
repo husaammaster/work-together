@@ -32,7 +32,7 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 - WebSocket-Handlers (Infrastruktur vorhanden, aber nicht genutzt)
 
 ### Frontend:
-- Basis-Styling mit CSS
+- Basis-Styling mit CSS (mit starker AI hilfe, aber viel manueller Korrektur und bigfixes)
 - Header mit Username-Input im Header
 
 ### Projekte
@@ -62,16 +62,12 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 
 | Priorität | Feature | Beschreibung | Geschätzte Zeit | Tag |
 |-----------|---------|--------------|-----------------|-----|
-| **MITTEL** | **Projekt bearbeiten** | Edit Funktionalität für eigene Projekte | **1-2h** | **6** |
-| **NIEDRIG** | **Styling verbessern** | bessere UX, responsive Design | **1-2h** | **6** |
-| **OPTIONAL** | **React.js Migration** | Frontend auf React umstellen | **8-12h** | - |
+| **Optional** | **Projekt bearbeiten** | Edit Funktionalität für eigene Projekte | **1-2h** | **6** |
 
 
 #### To dos
 - Projekt bearbeiten (1-2h)
-- CSS Styling verbessern (1-2h)
 - Word Dokument anfertigen und hochladen
-- Finale Tests & Dokumentation (1-2h)
 
 
 ## Datenbank-Schema

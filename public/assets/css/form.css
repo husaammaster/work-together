@@ -1,0 +1,102 @@
+/*
+================================================================================
+  FORM STYLES - Add Project Form
+================================================================================
+*/
+
+/* --- Form Container --- */
+#add_project_form {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* --- Form Field Groups --- */
+#add_project_form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Form Labels --- */
+#add_project_form label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+/* --- Form Inputs & Textareas --- */
+#add_project_form input[type="text"],
+#add_project_form input[type="number"],
+#add_project_form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #ffffff;
+}
+
+/* --- Focus States --- */
+#add_project_form input[type="text"]:focus,
+#add_project_form input[type="number"]:focus,
+#add_project_form textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* --- Hover States --- */
+#add_project_form input[type="text"]:hover,
+#add_project_form input[type="number"]:hover,
+#add_project_form textarea:hover {
+    border-color: #adb5bd;
+}
+
+/* --- Textarea Specific --- */
+#add_project_form textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+}
+
+/* --- Number Input Specific --- */
+#add_project_form input[type="number"] {
+    max-width: 150px;
+}
+
+/* --- Submit Button --- */
+#add_project_form button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 0.5rem;
+    align-self: flex-start;
+}
+
+#add_project_form button[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+#add_project_form button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+#add_project_form button[type="submit"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
