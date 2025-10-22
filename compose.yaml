@@ -1,0 +1,22 @@
+services:
+  couchdb:
+    image: apache/couchdb:latest
+    environment:
+      - COUCHDB_URL=http://couchdb:5984
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=alfa
+    ports:
+      - "5984:5984"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://couchdb:5984/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  web:
+    image: husam/wt-server
+    ports:
+      - "80:80"
+    depends_on:
+      couchdb:
+        condition: service_healthy
