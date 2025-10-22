@@ -1,7 +1,12 @@
 "use strict"
 
+import 'dotenv/config'
+
 import nano from "nano";
-import credentials from './credentials.json' with {type: 'json'};
+
+
+const { COUCHDB_URL, COUCHDB_USER, COUCHDB_PASSWORD } = process.env;
+const connectionUrl = `http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@${COUCHDB_URL}`;
 
 export const dbNames = {
     a_projects: 'a_projects', // just properties of the project
@@ -14,7 +19,7 @@ export const dbNames = {
     b_proj_helper_user_rel: 'b_proj_helper_user_rel', // project helper user relationship
 }
 
-export const dbScope = nano(`http://${credentials.user}:${credentials.pw}@${credentials.url}`).db;
+export const dbScope = nano(connectionUrl).db;
 
 
 export const init = () => {
@@ -27,7 +32,7 @@ export const init = () => {
             }
         }
     ).then(
-        () => console.log('Datenbanken initialisiert')
+        () => console.log('Datenbanken initialisiert mithilfe der .env datei')
     )
     
 }

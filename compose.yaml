@@ -1,20 +1,35 @@
+name: work-together
 services:
   couchdb:
     image: apache/couchdb:latest
     environment:
-      - COUCHDB_URL=http://couchdb:5984
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=alfa
     ports:
       - "5984:5984"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://couchdb:5984/"]
-      interval: 10s
+      interval: 2s
       timeout: 5s
       retries: 3
 
   web:
+    build: .
     image: husam/wt-server
+    command: npm run dev
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+            - .git/
+            - .DS_Store
+        - action: rebuild
+          path: package*.json
+    env_file:
+      - ./.env
     ports:
       - "80:80"
     depends_on:

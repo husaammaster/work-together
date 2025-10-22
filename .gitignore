@@ -1,5 +1,7 @@
 /node_modules/
 /.idea/
 /server/datenbanken/credentials.json
+/server/datenbanken/credentials.env
+.env
 
 **/*.DS_Store
