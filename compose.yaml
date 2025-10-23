@@ -3,8 +3,8 @@ services:
   couchdb:
     image: apache/couchdb:latest
     environment:
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=alfa
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
     ports:
       - "5984:5984"
     healthcheck:
