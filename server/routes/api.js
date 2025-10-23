@@ -9,6 +9,8 @@ server.get("/backend_health", (request, response) => {
   response.json({ status: "ok", message: "Backend läuft" });
 });
 
+const SERVERNAME = "Nodemon Server";
+
 // ============ PROJECTS ============ 
 // Get all projects
 server.post("/projects", (request, response) => {
@@ -16,7 +18,7 @@ server.post("/projects", (request, response) => {
 
   const filter = request.body.filter;
   if (filter != "") {
-    console.log(`\nServer: User \"${filter}\" requested his own projects`)
+    console.log(`\n${SERVERNAME}: User \"${filter}\" requested his own projects`);
     projectsDB.find({
             selector:{
                 'nutzer': {
@@ -32,7 +34,7 @@ server.post("/projects", (request, response) => {
       )
   }
   else {
-    console.log("\nServer: User requested all projects");
+    console.log(`\n${SERVERNAME}: User requested all projects`);
     projectsDB
       .list({ include_docs: true })
       .then((result) => result.rows.map((row) => row.doc))
@@ -49,11 +51,11 @@ server.post("/projects", (request, response) => {
 
 // Post create a project
 server.post("/new_project", (request, response) => {
-  console.log("\nServer: Neues Projekt angelgen angefordert");
+  console.log(`\n${SERVERNAME}: Neues Projekt angelgen angefordert`);
   const projectsDB = dbScope.use(dbNames.a_projects);
 
   const project = request.body;
-  console.log("\nServer: Neues Projekt angelgen angefordert: ", project);
+  console.log(`\n${SERVERNAME}: Neues Projekt angelgen angefordert: ${project}`);
   // { title, description, maxHelpers, items, ... }
 
   let duplicate = undefined;
@@ -66,17 +68,17 @@ server.post("/new_project", (request, response) => {
     })
     .then(() => {
       if (duplicate != undefined) {
-        console.log("\nServer: Projekt existiert bereits:", duplicate.doc.proj_name);
+        console.log(`\n${SERVERNAME}: Projekt existiert bereits: ${duplicate.doc.proj_name}`);
         response.status(409).json({
           success: false,
           message: "Ein Projekt mit diesem Titel existiert bereits",
           existingProject: duplicate,
         });
       } else {
-        console.log("\n Server: Projekt gestartet: ", project.proj_name);
+        console.log(`\n${SERVERNAME}: Projekt gestartet: ${project.proj_name}`);
         projectsDB
           .insert(project)
-          .then(console.log("\nServer: Projekt angelegt:", project.proj_name))
+          .then(console.log(`\n${SERVERNAME}: Projekt angelegt: ${project.proj_name}`))
           .then(
             () => response.json({ success: true, message: "Projekt angelegt" })
           )
@@ -88,13 +90,13 @@ server.post("/new_project", (request, response) => {
 
 
 server.post("/delete_project", (request, response) => {
-  console.log("\nServer: Projekt gelöscht angefordert");
+  console.log(`\n${SERVERNAME}: Projekt gelöscht angefordert`);
   const projectsDB = dbScope.use(dbNames.a_projects);
   const _id = request.body._id;
   const _rev = request.body._rev;
-  console.log("\nServer: Projekt gelöscht angefordert: ", _id, _rev);
+  console.log(`\n${SERVERNAME}: Projekt gelöscht angefordert: ${_id}, ${_rev}`);
   projectsDB.destroy(_id, _rev)
-    .then(console.log("\nServer: Projekt gelöscht: ", _id, _rev))
+    .then(console.log(`\n${SERVERNAME}: Projekt gelöscht: ${_id}, ${_rev}`))
     .then(
       () => response.json({ success: true, message: "Projekt gelöscht" })
     )
@@ -124,21 +126,21 @@ server.post('/processProjectForm', (request, response) => {
 })
 
 server.post("/project_page", (request, response) => {
-  console.log("\nServer: Projektseite angefordert");
+  console.log(`\n${SERVERNAME}: Projektseite angefordert`);
   const projectsDB = dbScope.use(dbNames.a_projects);
   const _id = request.body._id;
-  console.log("\nServer: Projektseite von _id: ", _id , "angefordert");
+  console.log(`\n${SERVERNAME}: Projektseite von _id: ${_id} angefordert`);
   projectsDB.get(_id)
     .then(
       result => {
-        console.log("\nServer: Projektseite von _id: ", _id , "gelesen: ", result.docs)
+        console.log(`\n${SERVERNAME}: Projektseite von _id: ${_id} gelesen: ${result.docs}`)
         response.json(result)
       }
     ).catch(console.warn);
 })
 
 server.post("/update_project", (request, response) => {
-  console.log("\nServer: Projekt aktualisiert angefordert");
+  console.log(`\n${SERVERNAME}: Projekt aktualisiert angefordert`);
   const projectsDB = dbScope.use(dbNames.a_projects);
   const _id = request.body.proj_id;
   const _rev = request.body._rev;
@@ -147,7 +149,7 @@ server.post("/update_project", (request, response) => {
   const description = request.body.description;
   const maxHelpers = request.body.maxHelpers;
   const items = request.body.items;
-  console.log("\nServer: Projekt aktualisiert angefordert: ", _id, _rev, proj_name, nutzer, description, maxHelpers, items);
+  console.log(`\n${SERVERNAME}: Projekt aktualisiert angefordert: ${_id}, ${_rev}, ${proj_name}, ${nutzer}, ${description}, ${maxHelpers}, ${items}`);
   projectsDB.insert({
     _id,
     _rev,
@@ -157,7 +159,7 @@ server.post("/update_project", (request, response) => {
     maxHelpers,
     items
   })
-    .then(console.log("\nServer: Projekt aktualisiert: ", _id, proj_name, description, maxHelpers, items))
+    .then(console.log(`\n${SERVERNAME}: Projekt aktualisiert: ${_id}, ${proj_name}, ${description}, ${maxHelpers}, ${items}`))
     .then(
       () => response.json({ success: true, message: "Projekt aktualisiert" })
     )
@@ -169,10 +171,10 @@ server.post("/update_project", (request, response) => {
 // =====HELPERLISTE=====
 
 server.post("/helper_list", (request, response) => {
-  console.log("\nServer: Helferliste angefordert");
+  console.log(`\n${SERVERNAME}: Helferliste angefordert`);
   const projectHelpersDB = dbScope.use(dbNames.b_proj_helper_user_rel);
   const proj_id = request.body.proj_id;
-  console.log("\nServer: Helferliste von Projekt " + proj_id + " angefordert");
+  console.log(`\n${SERVERNAME}: Helferliste von Projekt ${proj_id} angefordert`);
   projectHelpersDB.find({
     selector: {
       proj_id: {
@@ -181,18 +183,18 @@ server.post("/helper_list", (request, response) => {
     }
   }).then(
     result => {
-      console.log("\nServer: Helferliste von Projekt " + proj_id + " gelesen: ", result.docs)
+      console.log(`\n${SERVERNAME}: Helferliste von Projekt ${proj_id} gelesen: ${result.docs}`)
       response.json(result)
     }
   ).catch(console.warn);
 })
 
 server.post("/join_project", (request, response) => {
-  console.log("\nServer: Join Helferliste angefordert");
+  console.log(`\n${SERVERNAME}: Join Helferliste angefordert`);
   const projectHelpersDB = dbScope.use(dbNames.b_proj_helper_user_rel);
   const proj_id = request.body.proj_id;
   const helper = request.body.helper;
-  console.log("\nServer: Join Helferliste von Projekt " + proj_id + " angefordert");
+  console.log(`\n${SERVERNAME}: Join Helferliste von Projekt ${proj_id} angefordert`);
   projectHelpersDB.find({
     selector: {
       proj_id: {
@@ -205,12 +207,12 @@ server.post("/join_project", (request, response) => {
   })
   .then(result => {
     if (result.docs.length > 0) {
-      console.log("\nServer: Helfer " + helper + " ist bereits in der Helferliste von Projekt " + proj_id)
+      console.log(`\n${SERVERNAME}: Helfer ${helper} ist bereits in der Helferliste von Projekt ${proj_id}`)
       response.json({ success: false, message: "Helfer " + helper + " ist bereits in der Helferliste von Projekt " + proj_id })
     }
     else {
       projectHelpersDB.insert({proj_id, helper})
-    .then(console.log("\nServer: Join Helferliste von Projekt " + proj_id + " angefordert"))
+    .then(console.log(`\n${SERVERNAME}: Join Helferliste von Projekt ${proj_id} angefordert`))
     .then(
       () => response.json({ success: true, message: "Helfer " + helper + " hinzugefügt" })
     )
@@ -220,11 +222,11 @@ server.post("/join_project", (request, response) => {
 })
 
 server.post("/leave_project", (request, response) => {
-  console.log("\nServer: Leave Helferliste angefordert");
+  console.log(`\n${SERVERNAME}: Leave Helferliste angefordert`);
   const projectHelpersDB = dbScope.use(dbNames.b_proj_helper_user_rel);
   const proj_id = request.body.proj_id;
   const helper = request.body.helper;
-  console.log("\nServer: Leave Helferliste von Projekt " + proj_id + " angefordert");
+  console.log(`\n${SERVERNAME}: Leave Helferliste von Projekt ${proj_id} angefordert`);
   projectHelpersDB.find({
     selector: {
       proj_id: {
@@ -236,14 +238,14 @@ server.post("/leave_project", (request, response) => {
     }
   }).then(
     result => {
-      console.log("\nServer: Helfereintrag existiert: ", result.docs[0])
+      console.log(`\n${SERVERNAME}: Helfereintrag existiert: ${result.docs[0]}`)
       return result.docs[0];
     }
   ).then((result) => {
-      console.log("\nServer: Eintrag " + helper + " von Projekt " + proj_id + " wird entfernt")
+      console.log(`\n${SERVERNAME}: Eintrag ${helper} von Projekt ${proj_id} wird entfernt`)
       projectHelpersDB.destroy(result._id, result._rev)
     })
-    .then(console.log("\nServer: Eintrag " + helper + " von Projekt " + proj_id + " entfernt"))
+    .then(console.log(`\n${SERVERNAME}: Eintrag ${helper} von Projekt ${proj_id} entfernt`))
     .then(
       () => response.json({ success: true, message: "Helfer " + helper + " entfernt" })
     )
@@ -256,7 +258,7 @@ server.post("/leave_project", (request, response) => {
 // ======== COMMENTS ========
 
 server.post("/new_comment", (request, response) => {
-  console.log("\nServer: Neuer Kommentar angefordert");
+  console.log(`\n${SERVERNAME}: Neuer Kommentar angefordert`);
   const commentsDB = dbScope.use(dbNames.a_comments);
   const comment = {
     proj_id: request.body.proj_id,
@@ -264,9 +266,9 @@ server.post("/new_comment", (request, response) => {
     user: request.body.user,
     timestamp: request.body.timestamp,
   };
-  console.log("\nServer: Neuer Kommentar angefordert: ", comment);
+  console.log(`\n${SERVERNAME}: Neuer Kommentar angefordert: ${comment}`);
   commentsDB.insert(comment)
-    .then(result => console.log("\nServer: Neuer Kommentar angefordert: ", result))
+    .then(result => console.log(`\n${SERVERNAME}: Neuer Kommentar angefordert: ${result}`))
     .then(
       () => response.json({ success: true, message: "Kommentar hinzugefügt" })
     )
@@ -274,13 +276,13 @@ server.post("/new_comment", (request, response) => {
 })
 
 server.post("/delete_comment", (request, response) => {
-  console.log("\nServer: Kommentar löschen angefordert");
+  console.log(`\n${SERVERNAME}: Kommentar löschen angefordert`);
   const commentsDB = dbScope.use(dbNames.a_comments);
   const comment_id = request.body._id;
   const comment_rev = request.body._rev;
-  console.log("\nServer: Kommentar löschen angefordert: ", comment_id, comment_rev);
+  console.log(`\n${SERVERNAME}: Kommentar löschen angefordert: ${comment_id}, ${comment_rev}`);
   commentsDB.destroy(comment_id, comment_rev)
-    .then(console.log("\nServer: Kommentar löschen erfolgreich: ", comment_id, comment_rev))
+    .then(console.log(`\n${SERVERNAME}: Kommentar löschen erfolgreich: ${comment_id}, ${comment_rev}`))
     .then(
       () => response.json({ success: true, message: "Kommentar entfernt" })
     )
@@ -288,10 +290,10 @@ server.post("/delete_comment", (request, response) => {
 })
 
 server.post("/comment_list", (request, response) => {
-  console.log("\nServer: Kommentarliste angefordert");
+  console.log(`\n${SERVERNAME}: Kommentarliste angefordert`);
   const commentsDB = dbScope.use(dbNames.a_comments);
   const proj_id = request.body.proj_id;
-  console.log("\nServer: Kommentarliste von Projekt " + proj_id + " angefordert");
+  console.log(`\n${SERVERNAME}: Kommentarliste von Projekt ${proj_id} angefordert`);
   commentsDB.find({
     selector: {
       proj_id: {
@@ -300,7 +302,7 @@ server.post("/comment_list", (request, response) => {
     }
   }).then(
     result => {
-      console.log("\nServer: Kommentarliste von Projekt " + proj_id + " gelesen: ", result.docs)
+      console.log(`\n${SERVERNAME}: Kommentarliste von Projekt ${proj_id} gelesen: ${result.docs}`)
       response.json(result)
     }
   ).catch(console.warn); 
