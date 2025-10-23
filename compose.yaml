@@ -13,7 +13,7 @@ services:
       timeout: 5s
       retries: 3
 
-  web:
+  backend:
     build: .
     image: husam/wt-server
     command: npm run dev
@@ -24,6 +24,7 @@ services:
           target: /app
           ignore:
             - node_modules/
+            - react_app/
             - .git/
             - .DS_Store
         - action: rebuild
