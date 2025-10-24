@@ -7,19 +7,19 @@
 
 const Project = ({nutzer, proj_name, description, maxHelpers, items}) => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 mx-auto max-w-2xl">
-      <div className="flex items-center justify-between">
-        <p className="text-gray-600">{nutzer}</p>
-        <p className="text-gray-600">{maxHelpers} Helfer</p>
+    <div className="bg-gray-800 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
+      <div className="flex justify-between">
+        <p>{nutzer}</p>
+        <p>{maxHelpers} Helfer</p>
       </div>
       <h3 className="text-2xl font-bold mt-2">{proj_name}</h3>
-      <p className="text-gray-600 mb-4">{description}</p>
-      <div className="flex flex-col space-y-2">
-        <div className="flex flex-col space-y-1">
-          <p className="text-gray-600 font-semibold">Materialien:</p>
-          <ul className="space-y-1">
+      <p className="mb-4">{description}</p>
+      <div className="space-y-2">
+        <div className="space-y-1">
+          <p className="font-semibold">Materialien:</p>
+          <ul>
             {items.map((item, index) => (
-              <li key={index} className="text-gray-600">{item}</li>
+              <li key={index}>{item}</li>
             ))}
           </ul>
         </div>
