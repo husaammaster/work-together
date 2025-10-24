@@ -3,15 +3,13 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Project from './Projects'
+import {ProjectList} from './Pages'
 
 const App = () => {
   return (
     <div className="dark:bg-gray-900">
       <Header />
-      <Project nutzer="Michael" proj_name="Pflanzen im Park" description="In den Martina Park gehen" maxHelpers={4} items={["Schaufeln", "Gartenhandschuhe"]} className="dark:border-gray-700 dark:bg-gray-800" />
-      <Project nutzer="Michael" proj_name="Pflanzen im Park" description="In den Martina Park gehen" maxHelpers={4} items={["Schaufeln", "Gartenhandschuhe"]} className="dark:border-gray-700 dark:bg-gray-800" />
-      <Project nutzer="Michael" proj_name="Pflanzen im Park" description="In den Martina Park gehen" maxHelpers={4} items={["Schaufeln", "Gartenhandschuhe"]} className="dark:border-gray-700 dark:bg-gray-800" />
-      <Project nutzer="Michael" proj_name="Pflanzen im Park" description="In den Martina Park gehen" maxHelpers={4} items={["Schaufeln", "Gartenhandschuhe"]} className="dark:border-gray-700 dark:bg-gray-800" />
+      <ProjectList />
     </div>
   )
 }
