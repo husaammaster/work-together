@@ -129,5 +129,9 @@ docker compose up --watch
 
 ## Frontend-Containerisierung (Status)
 
-- Derzeit werden statische Dateien über Express (`server/server.js`) aus `public/` geliefert.
-- Eine separate Frontend-Containerisierung ist vorerst ausgesetzt und wird später nach genauem Task-Scope geprüft.
+- Legacy: Statische Dateien in `public/` werden über Express (`server/server.js`) geliefert.
+- New: Decoupled React (Vite) SPA in `react_app/` – API-driven frontend.
+  - Läuft lokal auf `localhost:5173` (`npm run dev` in `react_app/`).
+  - Fetcht von Backend auf `http://localhost:80`.
+  - CORS konfiguriert für `localhost:5173`, damit react_app vom server fetchen darf.
+- Containerisierung ausgesetzt bis vollständige Funktionalität gemerged ist.

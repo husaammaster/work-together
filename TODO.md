@@ -1,10 +1,23 @@
 ## Current To Dos
 
-### Next Task (today)
+### Completed
 
-- frontend containerization
-  - find out the task definition
-  - do appropriate code changes
-  - docker container around the changed code
+- Set up React (Vite) app in `react_app/` with Tailwind.
+- Configure CORS in backend for React app on `localhost:5173`.
+- Implement basic ProjectList with fetch from `/projects` endpoint.
+- Update docs (TECHSTACK.md, README.md) with current architecture.
 
-### Futue Tasks
+### Next Task (today/this week)
+
+- Merge full legacy functionality from `/public` into React SPA.
+  - Project create/edit forms (add_project.html → form component).
+  - Project detail page (project_page.html → routed component with /project_page fetch).
+  - My projects filter (my_projects.html → filter by user).
+  - Helper join/leave (frontend for /join_project, /leave_project).
+  - Comment list/add/delete (frontend for /comment_list, /new_comment, /delete_comment).
+- Add React Router for SPA navigation (/, /my-projects, /projects/:id, /projects/new, /projects/:id/edit).
+
+### Future Tasks
+
+- Containerize React app and integrate into Docker Compose.
+- Test full CRUD in Docker environment.

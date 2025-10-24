@@ -7,7 +7,7 @@
 
 const Project = ({nutzer, proj_name, description, maxHelpers, items}) => {
   return (
-    <div className="bg-gray-800 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
+    <div className="bg-gray-800 m-7 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
       <div className="flex justify-between">
         <p>{nutzer}</p>
         <p>{maxHelpers} Helfer</p>
