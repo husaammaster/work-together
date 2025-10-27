@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Project from "./Projects";
+import { ProjectCard, ProjectPage } from "./Projects";
 
 const apiBase = import.meta.env.VITE_API_BASE_URL;
 console.log(`Current vite api base url: ${apiBase}`);
@@ -47,13 +47,14 @@ export const ProjectListPage = () => {
   return (
     <>
       {projects.map((project, index) => (
-        <Project
+        <ProjectCard
           key={index}
           nutzer={project.nutzer}
           proj_name={project.proj_name}
           description={project.description}
           maxHelpers={project.maxHelpers}
           items={project.items || []}
+          proj_id={project._id}
         />
       ))}
     </>
@@ -79,9 +80,34 @@ export const MyProjectsPage = () => {
 
 export const ProjectsDetailPage = () => {
   const { proj_id } = useParams();
-  return (
-    <p className="bg-gray-800 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
-      placeholder for project detail page of: {proj_id}
-    </p>
-  );
+  const [fetchResult, setFetchResult] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    console.log("Projectk id _id ", proj_id);
+
+    const fetchProjectById = async () => {
+      try {
+        const response = await fetch(`${apiBase}/project_page`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ _id: proj_id }),
+        });
+        if (!response.ok)
+          throw new Error(`Failed to fetch project by id ${proj_id}`);
+        const data = await response.json();
+        setFetchResult(data);
+      } catch {
+        setError("Failed to fetch project by id");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjectById();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  return <ProjectPage project={fetchResult} />;
 };

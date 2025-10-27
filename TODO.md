@@ -12,7 +12,13 @@
 
 - Merge full legacy functionality from `/public` into React SPA.
   - Project create/edit forms (add_project.html → form component).
-  - Project detail page (project_page.html → routed component with /project_page fetch).
+  - **Project detail page (project_page.html → routed component with /project_page fetch)**:
+    - Display full project data
+    - Show owner badge
+    - Edit/Delete buttons (visible only to owner)
+    - Helper list & join/leave buttons
+    - Comments list & add/delete
+    - Material list
   - My projects filter (my_projects.html → filter by user).
   - Helper join/leave (frontend for /join_project, /leave_project).
   - Comment list/add/delete (frontend for /comment_list, /new_comment, /delete_comment).
