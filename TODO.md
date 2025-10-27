@@ -23,6 +23,7 @@
   - Helper join/leave (frontend for /join_project, /leave_project).
   - Comment list/add/delete (frontend for /comment_list, /new_comment, /delete_comment).
 - Add React Router for SPA navigation (/, /my-projects, /projects/:id, /projects/new, /projects/:id/edit).
+- better styling and dark mode toggle in header
 
 ### Future Tasks
 
