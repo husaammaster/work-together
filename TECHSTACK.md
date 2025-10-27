@@ -47,8 +47,8 @@ Notes:
   - Runs locally on `localhost:5173`.
   - Fetches from backend at `http://localhost:80` (configured via `.env.development`).
   - CORS configured in backend to allow `localhost:5173`.
-  - Current: Project list with fetch from `/projects` endpoint.
-  - Next: Merge full CRUD (create/edit projects, helpers, comments), add routing with React Router, basic Redux setup for user state.
+  - Current: Project list with fetch from `/projects` endpoint, Redux Toolkit integrated for user state, dynamic NavLinks.
+  - Next: Merge full CRUD (view, create, edit projects, helpers, comments), add routing with React Router, basic Redux setup for user state.
 
 ### CORS
 
