@@ -11,14 +11,12 @@
   },
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "^2.9.2",
     "bootstrap-icons": "^1.13.1",
     "chalk": "^5.6.2",
     "dotenv": "^16.4.5",
     "express": "^5.1.0",
     "formidable": "^3.5.4",
     "nano": "^11.0.2",
-    "react-redux": "^9.2.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
