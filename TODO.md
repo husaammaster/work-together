@@ -5,10 +5,11 @@
 - Set up React (Vite) app in `react_app/` with Tailwind.
 - Configure CORS in backend for React app on `localhost:5173`.
 - Implement basic ProjectList with fetch from `/projects` endpoint.
-- Update docs (TECHSTACK.md, README.md) with current architecture.
+- Update docs (TECHSTACK.md, README.md, FILESTRUCTURE.md) with current architecture.
 
 ### Next Task (today/this week)
 
+- Set up Redux Toolkit for state management (store and user slice).
 - Merge full legacy functionality from `/public` into React SPA.
   - Project create/edit forms (add_project.html → form component).
   - Project detail page (project_page.html → routed component with /project_page fetch).

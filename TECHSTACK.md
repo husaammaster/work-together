@@ -32,6 +32,7 @@
 - `couchdb`: Apache CouchDB (exposes 5984) with healthcheck.
 
 Notes:
+
 - `develop.watch` rules are active only when starting with `docker compose up --watch` (or `docker compose watch`).
 - React app runs locally (`npm run dev` in `react_app/`) and fetches from backend via CORS.
 
@@ -39,11 +40,15 @@ Notes:
 
 - **Legacy**: Static HTML/JS in `public/`, served by Express.
 - **New**: React (Vite) SPA in `react_app/`, decoupled API-driven frontend.
+  - Framework: React with Vite for build tooling.
+  - Styling: Tailwind CSS for responsive dark-mode UI.
+  - State Management: Redux Toolkit for global state (user management, future expansions).
+  - Routing: React Router for SPA navigation.
   - Runs locally on `localhost:5173`.
   - Fetches from backend at `http://localhost:80` (configured via `.env.development`).
   - CORS configured in backend to allow `localhost:5173`.
   - Current: Project list with fetch from `/projects` endpoint.
-  - Next: Merge full CRUD (create/edit projects, helpers, comments), add routing with React Router.
+  - Next: Merge full CRUD (create/edit projects, helpers, comments), add routing with React Router, basic Redux setup for user state.
 
 ### CORS
 

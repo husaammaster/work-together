@@ -20,7 +20,8 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 - **express.js** als Webserver
 - **nano** als couchDB-Client
 - **WebSocket (ws)** für Echtzeit-Kommunikation
-- **vanilla js** als Frontend, danach React.js falls genug Zeit da ist (Lernfokus ist aber couchDB Datenbanken)
+- **vanilla js** als Legacy Frontend in `public/`
+- **React.js (Vite)** als neue Frontend SPA in `react_app/` mit Redux Toolkit für State Management und Tailwind CSS für Styling
 
 ## Projekt-Status/Features
 
@@ -37,6 +38,7 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 
 - Basis-Styling mit CSS (mit starker AI hilfe, aber viel manueller Korrektur und bigfixes)
 - Header mit Username-Input im Header
+- **React SPA (Vite) in Entwicklung**: Projekt-Übersicht mit API-Fetch, Routing mit React Router, State Management mit Redux Toolkit für User-Verwaltung, Tailwind CSS für Dark-Mode UI
 
 ### Projekte
 
