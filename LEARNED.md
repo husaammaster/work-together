@@ -2,7 +2,8 @@
 
 - Redux/Redux Toolkit basics
 - React Router: Library for client-side routing in SPAs
-- Tailwind CSS: Utility-first CSS framework for rapid UI development with dark-mode support
+- Tailwind CSS v4
+- daisyUI v5: Tailwind component library (navbar, card, btn, badge) and themes via `data-theme` on `<html>`
 - Bootstrap CSS: Icon library used in legacy frontend (not active in React SPA).
 - CouchDB: NoSQL document database with HTTP API; used for projects, comments, helpers.
 - Vite create react: Build tool + dev server for React SPA (`npm create vite@latest`).
