@@ -6,7 +6,7 @@ export interface Comment {
   _id: string;
   _rev?: string;
   proj_id: string;
-  author: string;
+  user: string;
   comment: string;
   timestamp?: number;
 }

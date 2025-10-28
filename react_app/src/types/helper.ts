@@ -6,7 +6,7 @@ export interface Helper {
   _id: string;
   _rev?: string;
   proj_id: string;
-  nutzer: string;
+  helper: string;
 }
 
 export interface HelperListResponse {

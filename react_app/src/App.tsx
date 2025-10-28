@@ -6,6 +6,8 @@ import {
   ProjectsDetailPage,
   MyProjectsPage,
   NotFoundPage,
+  AddProjectPage,
+  EditProjectPage,
 } from "./Pages.tsx";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { setUser } from "./features/userSlice";
@@ -18,6 +20,8 @@ const App = () => {
           <Route index element={<ProjectListPage />} />
           <Route path="/my_projects/:nutzer" element={<MyProjectsPage />} />
           <Route path="/project/:proj_id" element={<ProjectsDetailPage />} />
+          <Route path="/project/:proj_id/edit" element={<EditProjectPage />} />
+          <Route path="/new_project" element={<AddProjectPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
@@ -68,35 +72,47 @@ const Navbar = () => {
   return (
     <nav className="bg-base-300 shadow">
       <div className="max-w-3xl mx-auto flex items-center justify-between gap-2 p-2">
+        <div className="flex items-center gap-2">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "btn btn-ghost btn-sm btn-active"
+                : "btn btn-ghost btn-sm"
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/my_projects/Alex"
+            className={({ isActive }) =>
+              isActive
+                ? "btn btn-ghost btn-sm btn-active"
+                : "btn btn-ghost btn-sm"
+            }
+          >
+            Alex's Projekte
+          </NavLink>
+          <NavLink
+            to={`/my_projects/${user}`}
+            className={({ isActive }) =>
+              isActive
+                ? "btn btn-ghost btn-sm btn-active"
+                : "btn btn-ghost btn-sm"
+            }
+          >
+            Meine Projekte
+          </NavLink>
+        </div>
         <NavLink
-          to="/"
+          to="/new_project"
           className={({ isActive }) =>
             isActive
-              ? "btn btn-ghost btn-sm btn-active"
-              : "btn btn-ghost btn-sm"
+              ? "btn btn-primary btn-sm btn-outline"
+              : "btn btn-primary btn-sm"
           }
         >
-          Home
-        </NavLink>
-        <NavLink
-          to="/my_projects/Alex"
-          className={({ isActive }) =>
-            isActive
-              ? "btn btn-ghost btn-sm btn-active"
-              : "btn btn-ghost btn-sm"
-          }
-        >
-          Alex's Projekte
-        </NavLink>
-        <NavLink
-          to={`/my_projects/${user}`}
-          className={({ isActive }) =>
-            isActive
-              ? "btn btn-ghost btn-sm btn-active"
-              : "btn btn-ghost btn-sm"
-          }
-        >
-          Meine eigenen Projekte
+          + Neues Projekt
         </NavLink>
       </div>
     </nav>
