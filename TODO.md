@@ -7,12 +7,13 @@
 - Implement basic ProjectList with fetch from `/projects` endpoint.
 - Set up Redux Toolkit for state management (store and user slice).
 - Update docs (TECHSTACK.md, README.md, FILESTRUCTURE.md) with current architecture.
-- better styling and dark mode toggle in header (using daisyUI)
+- Better styling and dark mode toggle in header (using daisyUI).
 - Add React Router for SPA navigation (/, /my-projects, /projects/:id, /projects/new, /projects/:id/edit).
+- Migrate React app to TypeScript (`.tsx` files, type definitions).
+- Fix TypeScript entry point in `index.html` (main.tsx instead of main.jsx).
 
 ### Next Task (today/this week)
 
-- (high prio) Merge all jsx to typescript for better dev experience and less errors
 - Merge full legacy functionality from `/public` into React SPA.
   - Project create/edit forms (add_project.html → form component).
   - **Project detail page (project_page.html → routed component with /project_page fetch)**:

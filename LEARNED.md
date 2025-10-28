@@ -2,6 +2,7 @@
 
 - Redux/Redux Toolkit basics
 - React Router: Library for client-side routing in SPAs
+- React with TypeScript: Type-safe React development with `.tsx` components
 - Tailwind CSS v4
 - daisyUI v5: Tailwind component library (navbar, card, btn, badge) and themes via `data-theme` on `<html>`
 - Bootstrap CSS: Icon library used in legacy frontend (not active in React SPA).
@@ -11,3 +12,4 @@
 - NodeJS: JavaScript runtime for backend server.
 - WebSockets: Real-time bidirectional communication channel (ws library).
 - HTML, CSS, JS: Core web technologies for legacy static frontend.
+- TypeScript: Static type checking for JavaScript (used in React app).

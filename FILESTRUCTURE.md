@@ -42,15 +42,18 @@ Legacy static frontend assets (HTML/JS/CSS).
 New React (Vite) single-page application frontend.
 
 - `src/`: Source code.
-  - `App.jsx`: Main app component with routing.
-  - `Pages.jsx`: Page components (e.g., ProjectListPage, MyProjectsPage).
-  - `Projects.jsx`: Project display component.
+  - `App.tsx`: Main app component with routing.
+  - `Pages.tsx`: Page components (e.g., ProjectListPage, MyProjectsPage).
+  - `Projects.tsx`: Project display component.
   - `store.js`: Redux store configuration.
   - `features/`: Redux slices and state management.
     - `userSlice.js`: User state slice.
-  - `main.jsx`: App entry point.
+  - `main.tsx`: App entry point with TypeScript support.
+  - `types/`: TypeScript type definitions.
+    - `index.ts`: Shared type definitions.
   - `App.css`: App-specific styles.
   - `index.css`: Global styles (Tailwind).
+- `index.html`: Entry point with root div.
 - `package.json`: React app dependencies.
 - Other Vite config files.
 

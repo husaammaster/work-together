@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ProjectCard, ProjectPage } from "./Projects.tsx";
+import { Project } from "./types";
 
 const apiBase = import.meta.env.VITE_API_BASE_URL;
 console.log(`Current vite api base url: ${apiBase}`);
 
 export const ProjectListPage = () => {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -22,7 +23,11 @@ export const ProjectListPage = () => {
         const data = await response.json();
         setProjects(data);
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(String(err)); // fallback for non-Error throws
+        }
       } finally {
         setLoading(false);
       }
@@ -82,9 +87,9 @@ export const MyProjectsPage = () => {
 
 export const ProjectsDetailPage = () => {
   const { proj_id } = useParams();
-  const [fetchResult, setFetchResult] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [fetchResult, setFetchResult] = useState<Project | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log("Projectk id _id ", proj_id);

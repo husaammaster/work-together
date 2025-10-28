@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 const apiBase = import.meta.env.VITE_API_BASE_URL;
 
-import { Project, Comment, Helper } from "./types";
+import { Project, Comment } from "./types";
 
 export const ProjectCard = ({
   nutzer,
@@ -47,9 +47,11 @@ export const ProjectCard = ({
   );
 };
 
-export const ProjectPage = ({ project }: { project: Project }) => {
-  const { nutzer, proj_name, description, maxHelpers, items, _id } = project;
+export const ProjectPage = ({ project }: { project: Project | null }) => {
+  if (!project)
+    return <div className="alert alert-error">Projekt nicht gefunden</div>;
 
+  const { nutzer, proj_name, description, maxHelpers, items, _id } = project;
   return (
     <div id="project_page" className="card bg-base-200 shadow">
       <div className="card-body">

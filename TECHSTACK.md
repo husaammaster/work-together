@@ -41,14 +41,15 @@ Notes:
 - **Legacy**: Static HTML/JS in `public/`, served by Express.
 - Frontend: React (Vite) SPA in `react_app/`, decoupled API-driven frontend.
   - Framework: React with Vite for build tooling.
+  - Language: TypeScript (`.tsx` files for components, `.ts` for utilities).
   - Styling: Tailwind CSS v4 + daisyUI v5 (components like navbar, card, btn, badge; themes via `data-theme`).
   - State Management: Redux Toolkit for global state (user management, future expansions).
   - Routing: React Router for SPA navigation.
   - Runs locally on `localhost:5173`.
   - Fetches from backend at `http://localhost:80` (configured via env).
   - CORS configured in backend to allow `localhost:5173`.
-  - Current: Project list with fetch from `/projects` endpoint, Redux Toolkit integrated for user state, dynamic NavLinks.
-  - Next: Merge full CRUD (view, create, edit projects, helpers, comments), add routing with React Router, basic Redux setup for user state.
+  - Current: Project list with fetch from `/projects` endpoint, Redux Toolkit integrated for user state, dynamic NavLinks, TypeScript support.
+  - Next: Merge full CRUD (view, create, edit projects, helpers, comments), complete TypeScript migration.
 
 ### CORS
 

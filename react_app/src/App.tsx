@@ -6,9 +6,9 @@ import {
   ProjectsDetailPage,
   MyProjectsPage,
   NotFoundPage,
-} from "./Pages";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "./features/userSlice.js";
+} from "./Pages.tsx";
+import { useAppDispatch, useAppSelector } from "./hooks/redux";
+import { setUser } from "./features/userSlice";
 
 const App = () => {
   return (
@@ -26,10 +26,10 @@ const App = () => {
 };
 
 const Header = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.name);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.name);
 
-  const handleUserChange = (evnt) => {
+  const handleUserChange = (evnt: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUser(evnt.target.value));
   };
 
@@ -63,7 +63,7 @@ const Header = () => {
 };
 
 const Navbar = () => {
-  const user = useSelector((state) => state.user.name);
+  const user = useAppSelector((state) => state.user.name);
 
   return (
     <nav className="bg-base-300 shadow">
@@ -113,7 +113,7 @@ const Footer = () => {
 
 const Layout = () => {
   useEffect(() => {
-    const themes = [
+    const themes: string[] = [
       "cupcake",
       "dracula",
       "forest",
@@ -123,12 +123,12 @@ const Layout = () => {
       "emerald",
     ];
     const htmlEl = document.documentElement;
-    const current = htmlEl.getAttribute("data-theme");
+    const current: string | null = htmlEl.getAttribute("data-theme");
     console.log(`[Theme] current: ${current || "(none)"}`);
-    let idx = Math.max(0, themes.indexOf(current));
+    let idx: number = Math.max(0, themes.indexOf(current || ""));
     const timer = setInterval(() => {
       idx = (idx + 1) % themes.length;
-      htmlEl.setAttribute("data-theme", themes[idx]);
+      htmlEl.setAttribute("data-theme", themes[idx] || "light");
       console.log(`[Theme] switched to: ${themes[idx]}`);
     }, 10000);
     return () => clearInterval(timer);
