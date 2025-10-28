@@ -118,7 +118,6 @@ const Layout = () => {
       "dracula",
       "synthwave",
       "halloween",
-      "cyberpunk",
       "forest",
       "aqua",
       "luxury",
@@ -127,10 +126,12 @@ const Layout = () => {
     ];
     const htmlEl = document.documentElement;
     const current = htmlEl.getAttribute("data-theme");
+    console.log(`[Theme] current: ${current || "(none)"}`);
     let idx = Math.max(0, themes.indexOf(current));
     const timer = setInterval(() => {
       idx = (idx + 1) % themes.length;
       htmlEl.setAttribute("data-theme", themes[idx]);
+      console.log(`[Theme] switched to: ${themes[idx]}`);
     }, 10000);
     return () => clearInterval(timer);
   }, []);

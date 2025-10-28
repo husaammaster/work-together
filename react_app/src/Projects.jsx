@@ -5,6 +5,8 @@
 //  "items":
 
 import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+const apiBase = import.meta.env.VITE_API_BASE_URL;
 
 export const ProjectCard = ({
   nutzer,
@@ -52,17 +54,13 @@ export const ProjectPage = ({ project }) => {
     _id: proj_id,
   } = project;
 
-  console.log(project);
-  console.log(`nutzer: ${nutzer}`);
-  console.log(`proj_name: ${proj_name}`);
-  console.log(`description: ${description}`);
-  console.log(`maxHelpers: ${maxHelpers}`);
-  console.log(`items: ${items}`);
-  console.log(`proj_id: ${proj_id}`);
   return (
     <div id="project_page" className="card bg-base-200 shadow">
       <div className="card-body">
-        <div id="project_page__header" className="flex justify-between items-center">
+        <div
+          id="project_page__header"
+          className="flex justify-between items-center"
+        >
           <NavLink to={`/project/${proj_id}`}>
             <h2 className="card-title" id="project_page__title">
               {proj_name}
@@ -100,8 +98,6 @@ const HelferListe = ({ proj_id }) => {
 };
 
 const MaterialListe = ({ items }) => {
-  console.log(items);
-
   return (
     <div id="project_page__material-list">
       <div className="flex flex-wrap gap-2">
@@ -116,9 +112,55 @@ const MaterialListe = ({ items }) => {
 };
 
 const KommentarListe = ({ proj_id }) => {
+  console.log("Kommentare von Projekt id: ", proj_id);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    const fetchCommenst = async () => {
+      try {
+        const response = await fetch(`${apiBase}/comment_list`, {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ proj_id }),
+        });
+        if (!response.ok)
+          throw new Error("Failed to fetch comments" + response);
+        const data = await response.json();
+        setComments(data.docs);
+        console.log("Kommentare: ", comments);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCommenst();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="alert alert-info">
+        <span>Loading comments...</span>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="alert alert-error">
+        <span>Error: {error}</span>
+      </div>
+    );
   return (
     <div id="project_page__comment-list">
-      <p>Kommentare Placeholder von {proj_id}</p>
+      {/*replace this with comment component*/}
+      {comments.map((commentDoc, index) => (
+        <div key={index}>
+          <p>{commentDoc.comment}</p>
+        </div>
+      ))}
     </div>
   );
 };
