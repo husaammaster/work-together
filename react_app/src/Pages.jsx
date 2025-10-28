@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { ProjectCard, ProjectPage } from "./Projects";
+import { ProjectCard, ProjectPage } from "./Projects.tsx";
 
 const apiBase = import.meta.env.VITE_API_BASE_URL;
 console.log(`Current vite api base url: ${apiBase}`);
@@ -54,7 +54,7 @@ export const ProjectListPage = () => {
           description={project.description}
           maxHelpers={project.maxHelpers}
           items={project.items || []}
-          proj_id={project._id}
+          _id={project._id}
         />
       ))}
     </>
@@ -100,8 +100,12 @@ export const ProjectsDetailPage = () => {
           throw new Error(`Failed to fetch project by id ${proj_id}`);
         const data = await response.json();
         setFetchResult(data);
-      } catch {
-        setError("Failed to fetch project by id");
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(String(err)); // fallback for non-Error throws
+        }
       } finally {
         setLoading(false);
       }

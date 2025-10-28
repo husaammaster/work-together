@@ -8,14 +8,17 @@ import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 const apiBase = import.meta.env.VITE_API_BASE_URL;
 
+import { Project, Comment, Helper } from "./types";
+
 export const ProjectCard = ({
   nutzer,
   proj_name,
   description,
   maxHelpers,
   items,
-  proj_id,
-}) => {
+  _id,
+}: Project) => {
+  console.log("ProjectCard proj_id", _id);
   return (
     <div className="card bg-base-200 shadow mb-4">
       <div className="card-body">
@@ -23,7 +26,7 @@ export const ProjectCard = ({
           <p className="badge">{nutzer}</p>
           <p className="badge">{maxHelpers} Helfer</p>
         </div>
-        <NavLink to={`/project/${proj_id}`}>
+        <NavLink to={`/project/${_id}`}>
           <h3 className="card-title">{proj_name}</h3>
         </NavLink>
         <p className="">{description}</p>
@@ -44,15 +47,8 @@ export const ProjectCard = ({
   );
 };
 
-export const ProjectPage = ({ project }) => {
-  const {
-    nutzer,
-    proj_name,
-    description,
-    maxHelpers,
-    items,
-    _id: proj_id,
-  } = project;
+export const ProjectPage = ({ project }: { project: Project }) => {
+  const { nutzer, proj_name, description, maxHelpers, items, _id } = project;
 
   return (
     <div id="project_page" className="card bg-base-200 shadow">
@@ -61,7 +57,7 @@ export const ProjectPage = ({ project }) => {
           id="project_page__header"
           className="flex justify-between items-center"
         >
-          <NavLink to={`/project/${proj_id}`}>
+          <NavLink to={`/project/${_id}`}>
             <h2 className="card-title" id="project_page__title">
               {proj_name}
             </h2>
@@ -81,15 +77,15 @@ export const ProjectPage = ({ project }) => {
         <div className="divider">Materialien</div>
         <MaterialListe items={items} />
         <div className="divider">Helfer</div>
-        <HelferListe proj_id={proj_id} />
+        <HelferListe proj_id={_id} />
         <div className="divider">Kommentare</div>
-        <KommentarListe proj_id={proj_id} />
+        <KommentarListe proj_id={_id} />
       </div>
     </div>
   );
 };
 
-const HelferListe = ({ proj_id }) => {
+const HelferListe = ({ proj_id }: { proj_id: string }) => {
   return (
     <div id="project_page__helper-list">
       <p>Helferliste Placeholder von {proj_id}</p>
@@ -97,7 +93,7 @@ const HelferListe = ({ proj_id }) => {
   );
 };
 
-const MaterialListe = ({ items }) => {
+const MaterialListe = ({ items }: { items: string[] }) => {
   return (
     <div id="project_page__material-list">
       <div className="flex flex-wrap gap-2">
@@ -111,11 +107,11 @@ const MaterialListe = ({ items }) => {
   );
 };
 
-const KommentarListe = ({ proj_id }) => {
+const KommentarListe = ({ proj_id }: { proj_id: string }) => {
   console.log("Kommentare von Projekt id: ", proj_id);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     const fetchCommenst = async () => {
@@ -131,9 +127,13 @@ const KommentarListe = ({ proj_id }) => {
           throw new Error("Failed to fetch comments" + response);
         const data = await response.json();
         setComments(data.docs);
-        console.log("Kommentare: ", comments);
+        console.log("Kommentare: ", data.docs);
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(String(err)); // fallback for non-Error throws
+        }
       } finally {
         setLoading(false);
       }
