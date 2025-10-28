@@ -116,8 +116,6 @@ const Layout = () => {
     const themes = [
       "cupcake",
       "dracula",
-      "synthwave",
-      "halloween",
       "forest",
       "aqua",
       "luxury",
