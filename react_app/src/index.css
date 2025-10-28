@@ -1,1 +1,5 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  /* Enable themes you want available at runtime */
+  themes: light --default, dark --prefersdark, cupcake, dracula, synthwave, halloween, cyberpunk, forest, aqua, luxury, pastel, emerald;
+}

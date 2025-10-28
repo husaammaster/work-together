@@ -1,4 +1,5 @@
 import "./App.css";
+import { useEffect } from "react";
 import { Route, Routes, Outlet, NavLink } from "react-router-dom";
 import {
   ProjectListPage,
@@ -11,7 +12,7 @@ import { setUser } from "./features/userSlice.js";
 
 const App = () => {
   return (
-    <div className="dark:bg-gray-900">
+    <div className="">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<ProjectListPage />} />
@@ -34,21 +35,25 @@ const Header = () => {
 
   return (
     <>
-      <div className="backdrop-blur-2xl max-w-2xl mx-auto bg-blue-900/50 p-3 text-white sticky top-0 z-10 flex items-start justify-between">
-        <div className="flex flex-col space-y-2">
-          <h1 className="text-xl font-bold">Work Together</h1>
-          <p>Find projects you want to support</p>
+      <div className="navbar bg-base-200 sticky top-0 z-10 shadow">
+        <div className="navbar-start">
+          <div className="">
+            <h1 className="text-xl font-bold">Work Together</h1>
+            <p className="text-sm opacity-70">
+              Find projects you want to support
+            </p>
+          </div>
         </div>
-        <div className=" flex flex-col space-y-2">
-          <label htmlFor="user" className="text-sm font-medium">
-            Eingeloggt als{" "}
+        <div className="navbar-end gap-2">
+          <label htmlFor="user" className="text-sm">
+            Eingeloggt als
           </label>
           <input
             id="user"
             type="text"
             value={user}
             onChange={handleUserChange}
-            className="text-sm border border-gray-600 rounded-md "
+            className="input input-bordered input-sm w-40"
           />
         </div>
       </div>
@@ -61,33 +66,80 @@ const Navbar = () => {
   const user = useSelector((state) => state.user.name);
 
   return (
-    <nav className="backdrop-blur-2xl max-w-2xl mx-auto bg-blue-900/50 p-3 text-white sticky top-21 z-10 flex items-start justify-between">
-      <NavLink className="p-2 badge" to="/">
-        Home
-      </NavLink>
-      <NavLink className="p-2 badge" to="/my_projects/Alex">
-        Alex's Projekte
-      </NavLink>
-      <NavLink className="p-2 badge" to={`/my_projects/${user}`}>
-        Meine eigenen Projekte
-      </NavLink>
+    <nav className="bg-base-300 shadow">
+      <div className="max-w-3xl mx-auto flex items-center justify-between gap-2 p-2">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? "btn btn-ghost btn-sm btn-active"
+              : "btn btn-ghost btn-sm"
+          }
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/my_projects/Alex"
+          className={({ isActive }) =>
+            isActive
+              ? "btn btn-ghost btn-sm btn-active"
+              : "btn btn-ghost btn-sm"
+          }
+        >
+          Alex's Projekte
+        </NavLink>
+        <NavLink
+          to={`/my_projects/${user}`}
+          className={({ isActive }) =>
+            isActive
+              ? "btn btn-ghost btn-sm btn-active"
+              : "btn btn-ghost btn-sm"
+          }
+        >
+          Meine eigenen Projekte
+        </NavLink>
+      </div>
     </nav>
   );
 };
 
 const Footer = () => {
   return (
-    <p className="text-center text-white dark:bg-gray-800 p-3 mb-0">
-      Copyright Helpers Inc. 2025
-    </p>
+    <div className="footer footer-center bg-base-200 text-base-content p-4 mt-10">
+      <p>Copyright Helpers Inc. 2025</p>
+    </div>
   );
 };
 
 const Layout = () => {
+  useEffect(() => {
+    const themes = [
+      "cupcake",
+      "dracula",
+      "synthwave",
+      "halloween",
+      "cyberpunk",
+      "forest",
+      "aqua",
+      "luxury",
+      "pastel",
+      "emerald",
+    ];
+    const htmlEl = document.documentElement;
+    const current = htmlEl.getAttribute("data-theme");
+    let idx = Math.max(0, themes.indexOf(current));
+    const timer = setInterval(() => {
+      idx = (idx + 1) % themes.length;
+      htmlEl.setAttribute("data-theme", themes[idx]);
+    }, 10000);
+    return () => clearInterval(timer);
+  }, []);
   return (
     <>
       <Header />
-      <Outlet />
+      <main className="max-w-3xl mx-auto p-4">
+        <Outlet />
+      </main>
       <Footer />
     </>
   );

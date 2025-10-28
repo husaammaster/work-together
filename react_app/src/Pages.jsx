@@ -33,15 +33,15 @@ export const ProjectListPage = () => {
 
   if (loading)
     return (
-      <p className="bg-gray-800 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
-        Loading projects...
-      </p>
+      <div className="alert alert-info">
+        <span>Loading projects...</span>
+      </div>
     );
   if (error)
     return (
-      <p className="bg-gray-800 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
-        Error: {error}
-      </p>
+      <div className="alert alert-error">
+        <span>Error: {error}</span>
+      </div>
     );
 
   return (
@@ -63,18 +63,20 @@ export const ProjectListPage = () => {
 
 export const NotFoundPage = () => {
   return (
-    <p className="bg-gray-800 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
-      404 - Page Not Found
-    </p>
+    <div className="alert alert-warning">
+      <span>404 - Page Not Found</span>
+    </div>
   );
 };
 
 export const MyProjectsPage = () => {
   const { nutzer } = useParams();
   return (
-    <p className="bg-gray-800 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
-      placeholder for my projects page of: {nutzer}
-    </p>
+    <div className="card bg-base-200 shadow">
+      <div className="card-body">
+        <p>placeholder for my projects page of: {nutzer}</p>
+      </div>
+    </div>
   );
 };
 
@@ -107,7 +109,17 @@ export const ProjectsDetailPage = () => {
     fetchProjectById();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading)
+    return (
+      <div className="alert alert-info">
+        <span>Loading...</span>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="alert alert-error">
+        <span>Error: {error}</span>
+      </div>
+    );
   return <ProjectPage project={fetchResult} />;
 };

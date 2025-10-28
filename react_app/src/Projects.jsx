@@ -15,23 +15,27 @@ export const ProjectCard = ({
   proj_id,
 }) => {
   return (
-    <div className="bg-gray-800 m-7 shadow-md rounded-lg p-4 mx-auto max-w-2xl text-white">
-      <div className="flex justify-between">
-        <p>{nutzer}</p>
-        <p>{maxHelpers} Helfer</p>
-      </div>
-      <NavLink to={`/project/${proj_id}`}>
-        <h3 className="text-2xl font-bold mt-2">{proj_name}</h3>
-      </NavLink>
-      <p className="mb-4">{description}</p>
-      <div className="space-y-2">
-        <div className="space-y-1">
-          <p className="font-semibold">Materialien:</p>
-          <ul>
-            {items.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
+    <div className="card bg-base-200 shadow mb-4">
+      <div className="card-body">
+        <div className="flex justify-between items-center">
+          <p className="badge">{nutzer}</p>
+          <p className="badge">{maxHelpers} Helfer</p>
+        </div>
+        <NavLink to={`/project/${proj_id}`}>
+          <h3 className="card-title">{proj_name}</h3>
+        </NavLink>
+        <p className="">{description}</p>
+        <div className="">
+          <div className="">
+            <p className="">Materialien:</p>
+            <ul>
+              {items.map((item, index) => (
+                <li className="badge" key={index}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -56,29 +60,33 @@ export const ProjectPage = ({ project }) => {
   console.log(`items: ${items}`);
   console.log(`proj_id: ${proj_id}`);
   return (
-    <div
-      id="project_page"
-      className="text-inherit bg-inherit inherit text-white max-w-2xl mx-auto"
-    >
-      <div id="project_page__header" className="flex justify-between ">
-        <NavLink to={`/project/${proj_id}`}>
-          <h2 className="text-2xl font-bold" id="project_page__title">
-            {proj_name}
-          </h2>
-        </NavLink>
-        <div id="project_page__user">
-          <p id="project_page__user__name">{nutzer}</p>
+    <div id="project_page" className="card bg-base-200 shadow">
+      <div className="card-body">
+        <div id="project_page__header" className="flex justify-between items-center">
+          <NavLink to={`/project/${proj_id}`}>
+            <h2 className="card-title" id="project_page__title">
+              {proj_name}
+            </h2>
+          </NavLink>
+          <div id="project_page__user">
+            <p className="badge" id="project_page__user__name">
+              {nutzer}
+            </p>
+          </div>
         </div>
+        <div id="project_page__description">
+          <p>Beschreibung: {description}</p>
+        </div>
+        <div id="project_page__maxHelpers">
+          <p>Anzahl gesuchter Helfer: {maxHelpers}</p>
+        </div>
+        <div className="divider">Materialien</div>
+        <MaterialListe items={items} />
+        <div className="divider">Helfer</div>
+        <HelferListe proj_id={proj_id} />
+        <div className="divider">Kommentare</div>
+        <KommentarListe proj_id={proj_id} />
       </div>
-      <div id="project_page__description">
-        <p>Beschreibung: {description}</p>
-      </div>
-      <div id="project_page__maxHelpers">
-        <p>Anzahl gesuchter Helfer: {maxHelpers}</p>
-      </div>
-      <HelferListe proj_id={proj_id} />
-      <MaterialListe items={items} />
-      <KommentarListe proj_id={proj_id} />
     </div>
   );
 };
@@ -86,9 +94,7 @@ export const ProjectPage = ({ project }) => {
 const HelferListe = ({ proj_id }) => {
   return (
     <div id="project_page__helper-list">
-      <h3 className="text-2xl font-bold">
-        Helferliste Placeholder von {proj_id}
-      </h3>
+      <p>Helferliste Placeholder von {proj_id}</p>
     </div>
   );
 };
@@ -98,12 +104,13 @@ const MaterialListe = ({ items }) => {
 
   return (
     <div id="project_page__material-list">
-      <h3 className="text-2xl font-bold">Materialien</h3>
-      <ul>
+      <div className="flex flex-wrap gap-2">
         {items.map((item, index) => (
-          <li key={index}>{item}</li>
+          <span className="badge" key={index}>
+            {item}
+          </span>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
@@ -111,9 +118,7 @@ const MaterialListe = ({ items }) => {
 const KommentarListe = ({ proj_id }) => {
   return (
     <div id="project_page__comment-list">
-      <h3 className="text-2xl font-bold">
-        Kommentare Placeholde von {proj_id}
-      </h3>
+      <p>Kommentare Placeholder von {proj_id}</p>
     </div>
   );
 };
