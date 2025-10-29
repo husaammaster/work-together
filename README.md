@@ -41,9 +41,15 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 
 ### Frontend:
 
-- Basis-Styling mit CSS (mit starker AI hilfe, aber viel manueller Korrektur und bigfixes)
-- Header mit Username-Input im Header
-- **React SPA (Vite) in Entwicklung**: Projekt-Übersicht mit API-Fetch, Routing mit React Router, State Management mit Redux Toolkit für User-Verwaltung, Tailwind CSS v4 + daisyUI v5 für UI-Komponenten und Themes
+- **Legacy Frontend** (`/public`): Static HTML/JS/CSS, served by Express on port 80
+- **React SPA (Vite)** (`/react_app`): Complete frontend with all CRUD operations
+  - Containerized with Docker for reproducible builds
+  - Hot-reload development mode via `npm run dev -- --host`
+  - Routing with React Router
+  - State Management with Redux Toolkit
+  - Styling with Tailwind CSS v4 + daisyUI v5
+  - TypeScript support (`.tsx` components)
+  - Accessible at `http://localhost:5174` (Docker dev) or `http://localhost:5173` (local dev)
 
 ### SPA Routes (React Router)
 
@@ -128,14 +134,31 @@ npm run start
 
 ## Development (Docker Compose)
 
-- Lokaler Server läuft über Docker Compose mit develop.watch.
-- Start im Watch-Modus (damit Änderungen in den Container synchronisiert werden):
+Start all services with file sync and hot-reload:
 
 ```bash
 docker compose up --watch
 ```
 
-- Hinweise
-  - Die `develop.watch`-Regeln in `compose.yaml` sind nur aktiv, wenn mit `--watch` gestartet wird (oder `docker compose watch`).
-  - Backend-Änderungen unter `server/` triggern automatische Neustarts via nodemon.
-  - Frontend-Dateien unter `public/` benötigen keinen Server-Neustart; Browser-Refresh reicht.
+**Services**:
+
+- **Backend**: Express API on port 80 (http://localhost/)
+- **React Local Dev**: Vite dev server on port 5173 (http://localhost:5173/)
+- **React Docker Dev**: Vite dev server on port 5174 (http://localhost:5174/)
+- **CouchDB**: Database on port 5984
+
+**Watch behavior**:
+
+- Backend changes under `server/` trigger nodemon restart
+- React changes under `react_app/` trigger Vite hot-reload
+- Legacy frontend under `public/` requires browser refresh
+
+**Environment files**:
+
+- `.env.development`: Local dev (React on `localhost:5173`)
+- `.env.docker`: Docker dev (React on `localhost:5174`, uses `backend` service name)
+- `.env.production`: Production builds
+
+**CORS**:
+
+- Backend allows `localhost:5173` (local dev) and `localhost:5174` (Docker dev)

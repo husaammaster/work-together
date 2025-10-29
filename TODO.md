@@ -20,12 +20,26 @@
   - My projects filter by user
   - All CRUD operations for projects, helpers, comments
 
-### Next Task (today/this week)
+### Completed (React Containerization)
 
-- Containerize the React app, to get reproducible builds
-- Test full frontend in docker-built frontend
-- (low priority) Test full CRUD flow end-to-end
+- Containerize React app with Docker (Dockerfile for dev mode)
+- Set up Vite dev server with `--host` flag for accessibility
+- Configure environment files (`.env.development`, `.env.docker`, `.env.production`)
+- Add React service to Docker Compose with file sync and hot-reload
+- Fix CORS to allow both `localhost:5173` and `localhost:5174`
+- Test full CRUD flow end-to-end in Docker
+
+### Project Status
+
+**FINISHED** - All core features implemented and containerized:
+
+- Backend: Express API with CouchDB, all CRUD endpoints functional
+- Frontend: React SPA with full feature parity to legacy frontend
+- Containerization: Both backend and frontend run in Docker with hot-reload
+- Development: `docker compose up --watch` for seamless development
 
 ### Future Tasks
 
-- none -> start next project
+- Bug fixes and optimizations as needed
+- Production deployment configuration
+- Performance monitoring and optimization

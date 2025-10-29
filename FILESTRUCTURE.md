@@ -39,22 +39,32 @@ Legacy static frontend assets (HTML/JS/CSS).
 
 ## `react_app/` Directory
 
-New React (Vite) single-page application frontend.
+React (Vite) single-page application frontend, containerized with Docker.
 
 - `src/`: Source code.
-  - `App.tsx`: Main app component with routing.
-  - `Pages.tsx`: Page components (e.g., ProjectListPage, MyProjectsPage).
-  - `Projects.tsx`: Project display component.
-  - `store.js`: Redux store configuration.
+  - `App.tsx`: Main app component with routing, header, layout.
+  - `Pages.tsx`: Page components (ProjectListPage, MyProjectsPage, ProjectsDetailPage, AddProjectPage, EditProjectPage).
+  - `Projects.tsx`: Project display and list components.
+  - `AddProjectForm.tsx`: Form for creating new projects.
+  - `EditProjectForm.tsx`: Form for editing existing projects.
+  - `store.ts`: Redux store configuration.
   - `features/`: Redux slices and state management.
-    - `userSlice.js`: User state slice.
+    - `userSlice.ts`: User state slice (login/username).
+  - `hooks/`: Custom React hooks.
+    - `redux.ts`: Typed Redux hooks.
   - `main.tsx`: App entry point with TypeScript support.
   - `types/`: TypeScript type definitions.
-    - `index.ts`: Shared type definitions.
+    - `index.ts`: Shared type definitions (Project, Helper, Comment, etc.).
   - `App.css`: App-specific styles.
   - `index.css`: Global styles (Tailwind).
 - `index.html`: Entry point with root div.
+- `Dockerfile`: Multi-stage build (Node build stage, no runtime stage for dev).
+- `.dockerignore`: Excludes node_modules, dist, .DS_Store.
+- `.env.development`: API base URL for local dev (`http://localhost:80`).
+- `.env.docker`: API base URL for Docker dev (`http://backend:80`).
+- `.env.production`: API base URL for production builds (`http://localhost:80`).
 - `package.json`: React app dependencies.
+- `vite.config.js`: Vite configuration.
 - Other Vite config files.
 
 ## Other Directories
