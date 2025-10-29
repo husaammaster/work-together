@@ -5,6 +5,7 @@ services:
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+      - COUCHDB_LOG_LEVEL=warn
     ports:
       - "5984:5984"
     healthcheck:
@@ -15,7 +16,7 @@ services:
 
   backend:
     build: .
-    image: husam/wt-server
+    image: husam/wt-backend
     command: npm run dev
     develop:
       watch:
@@ -36,3 +37,23 @@ services:
     depends_on:
       couchdb:
         condition: service_healthy
+
+  react-build-launch:
+    build: ./react_app
+    image: husam/wt-react-build-launch
+    command: npm run dev -- --host
+    env_file:
+      - ./react_app/.env.docker
+    develop:
+      watch:
+        - action: sync
+          path: ./react_app
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
+            - .DS_Store
+        - action: rebuild
+          path: ./react_app/package*.json
+    ports:
+      - "5174:5173"

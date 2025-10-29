@@ -22,9 +22,9 @@
 
 ### Next Task (today/this week)
 
-- Test full CRUD flow end-to-end
 - Containerize the React app, to get reproducible builds
 - Test full frontend in docker-built frontend
+- (low priority) Test full CRUD flow end-to-end
 
 ### Future Tasks
 

@@ -128,6 +128,41 @@ const Footer = () => {
 };
 
 const Layout = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.name);
+
+  useEffect(() => {
+    // Set default random user if not already set
+    if (!user) {
+      const defaultUsers: string[] = [
+        "Kevin",
+        "Badr",
+        "Omar",
+        "Saleh",
+        "Ahmad",
+        "Marie",
+        "Leon",
+        "Alex",
+        "Jonas",
+        "Muhammad",
+        "Michael",
+        "Sarah",
+        "David",
+        "Fatima",
+        "Noah",
+        "Miriam",
+        "Adam",
+        "Leah",
+        "Ibrahim",
+        "Hannah",
+        "Samuel",
+      ];
+      const randomUser: string =
+        defaultUsers[Math.floor(Math.random() * defaultUsers.length)] || "Alex";
+      dispatch(setUser(randomUser));
+    }
+  }, []);
+
   useEffect(() => {
     const themes: string[] = [
       "cupcake",
