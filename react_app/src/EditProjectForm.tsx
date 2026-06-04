@@ -80,7 +80,7 @@ export const EditProjectForm = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          _id: project._id,
+          proj_id: project._id,
           _rev: project._rev,
           nutzer: formData.nutzer,
           proj_name: formData.proj_name,

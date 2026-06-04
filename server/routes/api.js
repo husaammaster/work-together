@@ -78,10 +78,15 @@ server.post("/new_project", (request, response) => {
         console.log(`\n${SERVERNAME}: Projekt gestartet: ${project.proj_name}`);
         projectsDB
           .insert(project)
-          .then(console.log(`\n${SERVERNAME}: Projekt angelegt: ${project.proj_name}`))
-          .then(
-            () => response.json({ success: true, message: "Projekt angelegt" })
-          )
+          .then((result) => {
+            console.log(`\n${SERVERNAME}: Projekt angelegt: ${project.proj_name}`);
+            response.json({
+              success: true,
+              message: "Projekt angelegt",
+              _id: result.id,
+              _rev: result.rev,
+            });
+          })
           .catch(console.warn);
       }
     })
@@ -236,16 +241,17 @@ server.post("/leave_project", (request, response) => {
         $eq: helper
       }
     }
-  }).then(
-    result => {
-      console.log(`\n${SERVERNAME}: Helfereintrag existiert: ${result.docs[0]}`)
-      return result.docs[0];
-    }
-  ).then((result) => {
+  }).then((result) => {
+      const doc = result.docs[0];
+      if (!doc) {
+        console.log(`\n${SERVERNAME}: Kein Helfereintrag ${helper} in Projekt ${proj_id}`)
+        return; // nothing to remove
+      }
       console.log(`\n${SERVERNAME}: Eintrag ${helper} von Projekt ${proj_id} wird entfernt`)
-      projectHelpersDB.destroy(result._id, result._rev)
+      // Return the destroy promise so the response is only sent once the entry
+      // is actually deleted (otherwise rapid leave/join calls race).
+      return projectHelpersDB.destroy(doc._id, doc._rev);
     })
-    .then(console.log(`\n${SERVERNAME}: Eintrag ${helper} von Projekt ${proj_id} entfernt`))
     .then(
       () => response.json({ success: true, message: "Helfer " + helper + " entfernt" })
     )

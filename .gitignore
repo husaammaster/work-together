@@ -5,3 +5,7 @@
 .env
 
 **/*.DS_Store
+.DS_Store
+.capture/
+docs/gallery/_review/
+docs/gallery/_inventory.md

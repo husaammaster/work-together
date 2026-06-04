@@ -2,8 +2,9 @@ import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 const apiBase = import.meta.env.VITE_API_BASE_URL;
 
-import { Project, Comment, Helper, HelperListResponse } from "./types";
+import { Project, Helper, HelperListResponse } from "./types";
 import { useAppSelector } from "./hooks/redux";
+import { useProjectChat } from "./hooks/useProjectChat";
 
 export const ProjectCard = ({
   nutzer,
@@ -148,7 +149,7 @@ const HelferListe = ({ proj_id, isOwner }: { proj_id: string; isOwner: boolean }
       await fetch(`${apiBase}/join_project`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proj_id, nutzer: currentUser }),
+        body: JSON.stringify({ proj_id, helper: currentUser }),
       });
       setHelpers([...helpers, { _id: "", proj_id, helper: currentUser }]);
       setHelperCount(helperCount + 1);
@@ -162,7 +163,7 @@ const HelferListe = ({ proj_id, isOwner }: { proj_id: string; isOwner: boolean }
       await fetch(`${apiBase}/leave_project`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proj_id, nutzer: currentUser }),
+        body: JSON.stringify({ proj_id, helper: currentUser }),
       });
       setHelpers(helpers.filter((h) => h.helper !== currentUser));
       setHelperCount(helperCount - 1);
@@ -242,73 +243,17 @@ const MaterialListe = ({ items }: { items: string[] }) => {
 
 const KommentarListe = ({ proj_id, projectOwner }: { proj_id: string; projectOwner: string }) => {
   const currentUser = useAppSelector((state) => state.user.name);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const { comments, loading, error, connected, addComment, deleteComment } =
+    useProjectChat(proj_id);
   const [newComment, setNewComment] = useState<string>("");
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await fetch(`${apiBase}/comment_list`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ proj_id }),
-        });
-        if (!response.ok) throw new Error("Failed to fetch comments");
-        const data = await response.json();
-        setComments(data.docs);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err));
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchComments();
-  }, [proj_id]);
+  const sortedComments = [...comments].sort(
+    (a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0),
+  );
 
-  const handleAddComment = async () => {
-    if (!newComment.trim()) return;
-    try {
-      await fetch(`${apiBase}/new_comment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          proj_id,
-          comment: newComment,
-          user: currentUser,
-          timestamp: Date.now(),
-        }),
-      });
-      setNewComment("");
-      const response = await fetch(`${apiBase}/comment_list`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proj_id }),
-      });
-      const data = await response.json();
-      setComments(data.docs);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  };
-
-  const handleDeleteComment = async (commentId: string, commentRev: string | undefined) => {
-    if (!commentRev) return;
-    try {
-      await fetch(`${apiBase}/delete_comment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _id: commentId, _rev: commentRev }),
-      });
-      setComments(comments.filter((c) => c._id !== commentId));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
+  const handleAddComment = () => {
+    addComment(newComment, currentUser);
+    setNewComment("");
   };
 
   if (loading)
@@ -326,8 +271,20 @@ const KommentarListe = ({ proj_id, projectOwner }: { proj_id: string; projectOwn
 
   return (
     <div id="project_page__comment-list">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="badge badge-sm">{comments.length} Kommentare</span>
+        <span
+          className={`badge badge-sm gap-1 ${connected ? "badge-success" : "badge-ghost"}`}
+          title={connected ? "Live über WebSocket verbunden" : "Verbinde..."}
+        >
+          <span
+            className={`inline-block w-2 h-2 rounded-full ${connected ? "bg-current animate-pulse" : "bg-current opacity-50"}`}
+          />
+          {connected ? "Live" : "Offline"}
+        </span>
+      </div>
       <div className="space-y-3">
-        {comments.map((comment) => (
+        {sortedComments.map((comment) => (
           <div key={comment._id} className="card bg-base-100 shadow-sm">
             <div className="card-body p-3">
               <div className="flex justify-between items-start gap-2">
@@ -349,7 +306,7 @@ const KommentarListe = ({ proj_id, projectOwner }: { proj_id: string; projectOwn
                 </div>
                 {comment.user === currentUser && (
                   <button
-                    onClick={() => handleDeleteComment(comment._id, comment._rev)}
+                    onClick={() => deleteComment(comment)}
                     className="btn btn-xs btn-ghost btn-error"
                   >
                     Löschen

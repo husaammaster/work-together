@@ -1,9 +1,28 @@
 "use strict"
 
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import wsHandlers from './wsMessageHandlers.js'
 
 export const wsServer = new WebSocketServer({ port: 8080 });
+
+/**
+ * Broadcast a message to every connected client, optionally scoped to the
+ * clients that have subscribed to a given project "room".
+ *
+ * @param {object} data            Message to send (will be JSON-stringified).
+ * @param {object} [opts]
+ * @param {string} [opts.projId]   Only send to clients subscribed to this project.
+ * @param {WebSocket} [opts.except] Skip this socket (e.g. the original sender).
+ */
+export const broadcast = (data, { projId, except } = {}) => {
+    const json = JSON.stringify(data);
+    for (const client of wsServer.clients) {
+        if (client.readyState !== WebSocket.OPEN) continue;
+        if (except && client === except) continue;
+        if (projId && client.projId !== projId) continue;
+        client.send(json);
+    }
+};
 
 export const init = () => {
 
@@ -13,19 +32,31 @@ export const init = () => {
 
     wsServer.on("connection", (ws) => {
         console.log("Client connected to WebSocket-Server");
-        ws.on("message", (message) => {
-            message = JSON.parse(message.toString());
-            console.log("Received message", message);
 
-
-            if (wsHandlers[message.type]) {
-                wsHandlers[message.type](message.payload)
-            } else {
-                console.log(`Der Nachrichtentyp ${message.type} ist unbekannt`);
+        ws.on("message", async (raw) => {
+            let message;
+            try {
+                message = JSON.parse(raw.toString());
+            } catch {
+                console.warn("WS: received non-JSON message, ignoring");
+                return;
             }
 
+            const handler = wsHandlers[message.type];
+            if (!handler) {
+                console.log(`Der Nachrichtentyp ${message.type} ist unbekannt`);
+                return;
+            }
+
+            try {
+                await handler(message.payload, { ws, broadcast });
+            } catch (err) {
+                console.warn(`WS handler "${message.type}" failed:`, err);
+            }
         });
 
-        
+        ws.on("close", () => {
+            console.log("Client disconnected from WebSocket-Server");
+        });
     });
 }
