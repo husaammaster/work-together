@@ -6,20 +6,25 @@ import wsHandlers from './wsMessageHandlers.js'
 export const wsServer = new WebSocketServer({ port: 8080 });
 
 /**
- * Broadcast a message to every connected client, optionally scoped to the
- * clients that have subscribed to a given project "room".
+ * Broadcast a message to connected clients, optionally scoped to a "room".
  *
- * @param {object} data            Message to send (will be JSON-stringified).
+ * Rooms:
+ *   - per project: clients that sent `subscribe { proj_id }` (→ `client.projId`)
+ *   - the project list: clients that sent `subscribe_projects` (→ `client.projectsRoom`)
+ *
+ * @param {object} data               Message to send (will be JSON-stringified).
  * @param {object} [opts]
- * @param {string} [opts.projId]   Only send to clients subscribed to this project.
- * @param {WebSocket} [opts.except] Skip this socket (e.g. the original sender).
+ * @param {string} [opts.projId]      Only clients subscribed to this project.
+ * @param {boolean} [opts.projectsRoom] Only clients subscribed to the project list.
+ * @param {WebSocket} [opts.except]   Skip this socket (e.g. the original sender).
  */
-export const broadcast = (data, { projId, except } = {}) => {
+export const broadcast = (data, { projId, projectsRoom, except } = {}) => {
     const json = JSON.stringify(data);
     for (const client of wsServer.clients) {
         if (client.readyState !== WebSocket.OPEN) continue;
         if (except && client === except) continue;
         if (projId && client.projId !== projId) continue;
+        if (projectsRoom && !client.projectsRoom) continue;
         client.send(json);
     }
 };

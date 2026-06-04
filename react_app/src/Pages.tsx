@@ -4,39 +4,13 @@ import { ProjectCard, ProjectPage } from "./Projects.tsx";
 import { Project } from "./types";
 import { AddProjectForm } from "./AddProjectForm";
 import { EditProjectForm } from "./EditProjectForm";
+import { useProjectList } from "./hooks/useProjectList";
 
 const apiBase = import.meta.env.VITE_API_BASE_URL;
 console.log(`Current vite api base url: ${apiBase}`);
 
 export const ProjectListPage = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch(`${apiBase}/projects`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ filter: "" }), // Empty filter to get all projects
-        });
-        if (!response.ok) throw new Error("Failed to fetch projects");
-        const data = await response.json();
-        setProjects(data);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err)); // fallback for non-Error throws
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+  const { projects, loading, error } = useProjectList("");
 
   if (loading)
     return (
@@ -53,16 +27,8 @@ export const ProjectListPage = () => {
 
   return (
     <>
-      {projects.map((project, index) => (
-        <ProjectCard
-          key={index}
-          nutzer={project.nutzer}
-          proj_name={project.proj_name}
-          description={project.description}
-          maxHelpers={project.maxHelpers}
-          items={project.items || []}
-          _id={project._id}
-        />
+      {projects.map((project) => (
+        <ProjectCard key={project._id} project={project} />
       ))}
     </>
   );
@@ -78,34 +44,7 @@ export const NotFoundPage = () => {
 
 export const MyProjectsPage = () => {
   const { nutzer } = useParams();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch(`${apiBase}/projects`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ filter: nutzer }),
-        });
-        if (!response.ok) throw new Error("Failed to fetch projects");
-        const data = await response.json();
-        setProjects(data);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err));
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, [nutzer]);
+  const { projects, loading, error } = useProjectList(nutzer || "");
 
   if (loading)
     return (
@@ -128,16 +67,8 @@ export const MyProjectsPage = () => {
           <span>Keine Projekte gefunden</span>
         </div>
       ) : (
-        projects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            nutzer={project.nutzer}
-            proj_name={project.proj_name}
-            description={project.description}
-            maxHelpers={project.maxHelpers}
-            items={project.items || []}
-            _id={project._id}
-          />
+        projects.map((project) => (
+          <ProjectCard key={project._id} project={project} />
         ))
       )}
     </>

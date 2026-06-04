@@ -10,6 +10,9 @@ export interface Project {
   description: string;
   maxHelpers: number;
   items: string[];
+  /** Live counts attached by the backend (and kept in sync over WebSocket). */
+  helperCount?: number;
+  commentCount?: number;
 }
 
 export interface ProjectListResponse {

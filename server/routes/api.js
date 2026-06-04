@@ -2,6 +2,7 @@
 
 import { dbScope, dbNames } from "../datenbanken/openDBs.js";
 import { server } from "../server.js";
+import { broadcast } from "../wsServer.js";
 import formidable from 'formidable';
 
 // ============ HEALTH CHECK ============
@@ -11,40 +12,54 @@ server.get("/backend_health", (request, response) => {
 
 const SERVERNAME = "Nodemon Server";
 
-// ============ PROJECTS ============ 
-// Get all projects
-server.post("/projects", (request, response) => {
-  const projectsDB = dbScope.use(dbNames.a_projects);
+// ============ PROJECTS ============
+// Get all projects (optionally filtered by owner), each enriched with the
+// current helper and comment counts so the project cards can show them.
+server.post("/projects", async (request, response) => {
+  try {
+    const projectsDB = dbScope.use(dbNames.a_projects);
+    const helpersDB = dbScope.use(dbNames.b_proj_helper_user_rel);
+    const commentsDB = dbScope.use(dbNames.a_comments);
 
-  const filter = request.body.filter;
-  if (filter != "") {
-    console.log(`\n${SERVERNAME}: User \"${filter}\" requested his own projects`);
-    projectsDB.find({
-            selector:{
-                'nutzer': {
-                    $eq: filter
-                }
-            }
-      }).then(
-          result => result.docs
-      ).then(
-          (result) => response.json(result) // hängt die Daten an die Antwort zum Client
-      ).catch(
-          console.warn
-      )
+    const filter = request.body.filter;
+    let projects;
+    if (filter) {
+      console.log(`\n${SERVERNAME}: User "${filter}" requested his own projects`);
+      const result = await projectsDB.find({ selector: { nutzer: { $eq: filter } } });
+      projects = result.docs;
+    } else {
+      console.log(`\n${SERVERNAME}: User requested all projects`);
+      const result = await projectsDB.list({ include_docs: true });
+      projects = result.rows.map((row) => row.doc).filter((d) => d && !d._id.startsWith("_design"));
+    }
+
+    // Tally helper/comment counts in two queries instead of N+1 per project.
+    const [helpers, comments] = await Promise.all([
+      helpersDB.list({ include_docs: true }),
+      commentsDB.list({ include_docs: true }),
+    ]);
+    const helperCount = {};
+    const commentCount = {};
+    for (const row of helpers.rows) {
+      const p = row.doc?.proj_id;
+      if (p) helperCount[p] = (helperCount[p] || 0) + 1;
+    }
+    for (const row of comments.rows) {
+      const p = row.doc?.proj_id;
+      if (p) commentCount[p] = (commentCount[p] || 0) + 1;
+    }
+
+    response.json(
+      projects.map((p) => ({
+        ...p,
+        helperCount: helperCount[p._id] || 0,
+        commentCount: commentCount[p._id] || 0,
+      })),
+    );
+  } catch (err) {
+    console.warn(err);
+    response.status(500).json([]);
   }
-  else {
-    console.log(`\n${SERVERNAME}: User requested all projects`);
-    projectsDB
-      .list({ include_docs: true })
-      .then((result) => result.rows.map((row) => row.doc))
-      .then(
-        (result) => response.json(result) // hängt die Daten an die Antwort zum Client
-      )
-      .catch(console.warn); 
-
-  }
-
 });
 
 
@@ -86,6 +101,14 @@ server.post("/new_project", (request, response) => {
               _id: result.id,
               _rev: result.rev,
             });
+            // Push the new project to every open project list (live).
+            broadcast(
+              {
+                type: "project_added",
+                payload: { _id: result.id, _rev: result.rev, ...project, helperCount: 0, commentCount: 0 },
+              },
+              { projectsRoom: true },
+            );
           })
           .catch(console.warn);
       }
@@ -101,10 +124,13 @@ server.post("/delete_project", (request, response) => {
   const _rev = request.body._rev;
   console.log(`\n${SERVERNAME}: Projekt gelöscht angefordert: ${_id}, ${_rev}`);
   projectsDB.destroy(_id, _rev)
-    .then(console.log(`\n${SERVERNAME}: Projekt gelöscht: ${_id}, ${_rev}`))
-    .then(
-      () => response.json({ success: true, message: "Projekt gelöscht" })
-    )
+    .then(() => {
+      console.log(`\n${SERVERNAME}: Projekt gelöscht: ${_id}, ${_rev}`);
+      response.json({ success: true, message: "Projekt gelöscht" });
+      // Notify the open detail page (project room) and every list (projects room).
+      broadcast({ type: "project_deleted", payload: { _id } }, { projId: _id });
+      broadcast({ type: "project_deleted", payload: { _id } }, { projectsRoom: true });
+    })
     .catch(console.warn);
 });
 
@@ -164,10 +190,18 @@ server.post("/update_project", (request, response) => {
     maxHelpers,
     items
   })
-    .then(console.log(`\n${SERVERNAME}: Projekt aktualisiert: ${_id}, ${proj_name}, ${description}, ${maxHelpers}, ${items}`))
-    .then(
-      () => response.json({ success: true, message: "Projekt aktualisiert" })
-    )
+    .then((result) => {
+      console.log(`\n${SERVERNAME}: Projekt aktualisiert: ${_id}, ${proj_name}`);
+      response.json({ success: true, message: "Projekt aktualisiert" });
+      // Push the updated project to every open list (live).
+      broadcast(
+        {
+          type: "project_updated",
+          payload: { _id, _rev: result.rev, proj_name, nutzer, description, maxHelpers, items },
+        },
+        { projectsRoom: true },
+      );
+    })
     .catch(console.warn);
 })
           

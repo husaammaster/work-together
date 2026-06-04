@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, Outlet, NavLink } from "react-router-dom";
 import {
   ProjectListPage,
@@ -29,7 +29,28 @@ const App = () => {
   );
 };
 
-const Header = () => {
+const THEMES = [
+  "emerald",
+  "light",
+  "dark",
+  "cupcake",
+  "dracula",
+  "forest",
+  "aqua",
+  "luxury",
+  "pastel",
+  "synthwave",
+  "cyberpunk",
+  "halloween",
+];
+
+const Header = ({
+  theme,
+  onThemeChange,
+}: {
+  theme: string;
+  onThemeChange: (theme: string) => void;
+}) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.name);
 
@@ -49,6 +70,21 @@ const Header = () => {
           </div>
         </div>
         <div className="navbar-end gap-2">
+          <label htmlFor="theme" className="text-sm">
+            Theme
+          </label>
+          <select
+            id="theme"
+            value={theme}
+            onChange={(e) => onThemeChange(e.target.value)}
+            className="select select-bordered select-sm w-32"
+          >
+            {THEMES.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
           <label htmlFor="user" className="text-sm">
             Eingeloggt als
           </label>
@@ -130,6 +166,9 @@ const Footer = () => {
 const Layout = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.name);
+  const [theme, setTheme] = useState<string>(
+    () => localStorage.getItem("theme") || "emerald",
+  );
 
   useEffect(() => {
     // Set default random user if not already set
@@ -163,30 +202,15 @@ const Layout = () => {
     }
   }, []);
 
+  // Apply the chosen theme and remember it (no more auto-rotation).
   useEffect(() => {
-    const themes: string[] = [
-      "cupcake",
-      "dracula",
-      "forest",
-      "aqua",
-      "luxury",
-      "pastel",
-      "emerald",
-    ];
-    const htmlEl = document.documentElement;
-    const current: string | null = htmlEl.getAttribute("data-theme");
-    console.log(`[Theme] current: ${current || "(none)"}`);
-    let idx: number = Math.max(0, themes.indexOf(current || ""));
-    const timer = setInterval(() => {
-      idx = (idx + 1) % themes.length;
-      htmlEl.setAttribute("data-theme", themes[idx] || "light");
-      console.log(`[Theme] switched to: ${themes[idx]}`);
-    }, 10000);
-    return () => clearInterval(timer);
-  }, []);
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   return (
     <>
-      <Header />
+      <Header theme={theme} onThemeChange={setTheme} />
       <main className="max-w-3xl mx-auto p-4">
         <Outlet />
       </main>

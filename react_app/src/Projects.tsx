@@ -1,50 +1,69 @@
-import { NavLink } from "react-router-dom";
-import { useState, useEffect } from "react";
-const apiBase = import.meta.env.VITE_API_BASE_URL;
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-import { Project, Helper, HelperListResponse } from "./types";
+import { Project } from "./types";
 import { useAppSelector } from "./hooks/redux";
-import { useProjectChat } from "./hooks/useProjectChat";
+import { useProjectRoom } from "./hooks/useProjectChat";
+import { helperBadgeColor } from "./lib/helperBadge";
 
-export const ProjectCard = ({
-  nutzer,
-  proj_name,
-  description,
-  maxHelpers,
-  items,
-  _id,
-}: Project) => {
-  console.log("ProjectCard proj_id", _id);
+type Room = ReturnType<typeof useProjectRoom>;
+
+export const ProjectCard = ({ project }: { project: Project }) => {
+  const {
+    _id,
+    nutzer,
+    proj_name,
+    description,
+    maxHelpers,
+    items,
+    helperCount = 0,
+    commentCount = 0,
+  } = project;
+
+  // The whole card is the link to the detail page (it has no nested buttons,
+  // so there's nothing to overlap).
   return (
-    <div className="card bg-base-200 shadow mb-4">
+    <NavLink
+      to={`/project/${_id}`}
+      className="card bg-base-200 shadow mb-4 block transition-shadow hover:shadow-lg"
+    >
       <div className="card-body">
-        <div className="flex justify-between items-center">
-          <p className="badge">{nutzer}</p>
-          <p className="badge">{maxHelpers} Helfer</p>
-        </div>
-        <NavLink to={`/project/${_id}`}>
-          <h3 className="card-title">{proj_name}</h3>
-        </NavLink>
-        <p className="">{description}</p>
-        <div className="">
-          <div className="">
-            <p className="">Materialien:</p>
-            <ul>
-              {items.map((item, index) => (
-                <li className="badge" key={index}>
-                  {item}
-                </li>
-              ))}
-            </ul>
+        <div className="flex justify-between items-center gap-2">
+          <span className="badge badge-neutral">{nutzer}</span>
+          <div className="flex items-center gap-2">
+            <span
+              className={`badge ${helperBadgeColor(helperCount, maxHelpers)}`}
+              title="Helfer / gesucht"
+            >
+              {helperCount}/{maxHelpers} Helfer
+            </span>
+            <span className="badge badge-ghost" title="Kommentare">
+              💬 {commentCount}
+            </span>
           </div>
         </div>
+        <h3 className="card-title">{proj_name}</h3>
+        <p>{description}</p>
+        {items.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {items.map((item, index) => (
+              <span className="badge badge-outline" key={index}>
+                {item}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+    </NavLink>
   );
 };
 
 export const ProjectPage = ({ project }: { project: Project | null }) => {
   const currentUser = useAppSelector((state) => state.user.name);
+  const navigate = useNavigate();
+  // Hook is called unconditionally (rules of hooks); "" is harmless when the
+  // project failed to load and we early-return below.
+  const room = useProjectRoom(project?._id ?? "");
 
   if (!project)
     return <div className="alert alert-error">Projekt nicht gefunden</div>;
@@ -52,18 +71,27 @@ export const ProjectPage = ({ project }: { project: Project | null }) => {
   const { nutzer, proj_name, description, maxHelpers, items, _id, _rev } = project;
   const isOwner = currentUser === nutzer;
 
-  const handleDeleteProject = async () => {
+  // The project was deleted (by anyone) while this page was open.
+  if (room.deleted) {
+    return (
+      <div className="card bg-base-200 shadow">
+        <div className="card-body items-center text-center gap-3">
+          <h2 className="card-title">Projekt wurde gelöscht</h2>
+          <p className="opacity-70">
+            Dieses Projekt wurde inzwischen entfernt und ist nicht mehr verfügbar.
+          </p>
+          <NavLink to="/" className="btn btn-primary btn-sm">
+            Zur Übersicht
+          </NavLink>
+        </div>
+      </div>
+    );
+  }
+
+  const handleDeleteProject = () => {
     if (!window.confirm("Wirklich löschen?")) return;
-    try {
-      await fetch(`${apiBase}/delete_project`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _id, _rev }),
-      });
-      window.location.href = "/";
-    } catch (err) {
-      alert(err instanceof Error ? err.message : String(err));
-    }
+    room.deleteProject(_rev);
+    navigate("/");
   };
 
   return (
@@ -74,11 +102,9 @@ export const ProjectPage = ({ project }: { project: Project | null }) => {
           className="flex justify-between items-center gap-2"
         >
           <div>
-            <NavLink to={`/project/${_id}`}>
-              <h2 className="card-title" id="project_page__title">
-                {proj_name}
-              </h2>
-            </NavLink>
+            <h2 className="card-title" id="project_page__title">
+              {proj_name}
+            </h2>
             <p className="text-sm opacity-70">von {nutzer}</p>
           </div>
           {isOwner && (
@@ -104,78 +130,36 @@ export const ProjectPage = ({ project }: { project: Project | null }) => {
         <div className="divider">Materialien</div>
         <MaterialListe items={items} />
         <div className="divider">Helfer</div>
-        <HelferListe proj_id={_id} isOwner={isOwner} />
+        <HelferListe
+          room={room}
+          maxHelpers={maxHelpers}
+          isOwner={isOwner}
+          currentUser={currentUser}
+        />
         <div className="divider">Kommentare</div>
-        <KommentarListe proj_id={_id} projectOwner={nutzer} />
+        <KommentarListe room={room} projectOwner={nutzer} currentUser={currentUser} />
       </div>
     </div>
   );
 };
 
-const HelferListe = ({ proj_id, isOwner }: { proj_id: string; isOwner: boolean }) => {
-  const currentUser = useAppSelector((state) => state.user.name);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [helpers, setHelpers] = useState<Helper[]>([]);
-  const [helperCount, setHelperCount] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchHelpers = async () => {
-      try {
-        const response = await fetch(`${apiBase}/helper_list`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ proj_id }),
-        });
-        if (!response.ok) throw new Error("Failed to fetch helpers");
-        const data: HelperListResponse = await response.json();
-        setHelpers(data.docs);
-        setHelperCount(data.docs.length);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err));
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchHelpers();
-  }, [proj_id]);
-
-  const handleJoinProject = async () => {
-    try {
-      await fetch(`${apiBase}/join_project`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proj_id, helper: currentUser }),
-      });
-      setHelpers([...helpers, { _id: "", proj_id, helper: currentUser }]);
-      setHelperCount(helperCount + 1);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  };
-
-  const handleLeaveProject = async () => {
-    try {
-      await fetch(`${apiBase}/leave_project`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proj_id, helper: currentUser }),
-      });
-      setHelpers(helpers.filter((h) => h.helper !== currentUser));
-      setHelperCount(helperCount - 1);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  };
+const HelferListe = ({
+  room,
+  maxHelpers,
+  isOwner,
+  currentUser,
+}: {
+  room: Room;
+  maxHelpers: number;
+  isOwner: boolean;
+  currentUser: string;
+}) => {
+  const { helpers, loading, error } = room;
 
   if (loading)
     return (
       <div className="alert alert-info">
-        <span>Loading helpers...</span>
+        <span>Helfer werden geladen...</span>
       </div>
     );
   if (error)
@@ -185,31 +169,27 @@ const HelferListe = ({ proj_id, isOwner }: { proj_id: string; isOwner: boolean }
       </div>
     );
 
-  const isUserHelper = helpers.some((h) => h.helper === currentUser);
-  const helperColor =
-    helperCount === 0
-      ? "badge-error"
-      : helperCount < 2
-        ? "badge-warning"
-        : "badge-success";
+  const helperCount = helpers.length;
+  const isUserHelper = helpers.includes(currentUser);
 
   return (
     <div id="project_page__helper-list">
       <div className="flex items-center gap-2 mb-4">
-        <span className={`badge ${helperColor}`}>
-          {helperCount} Helfer
+        <span className={`badge ${helperBadgeColor(helperCount, maxHelpers)}`}>
+          {helperCount}/{maxHelpers} Helfer
         </span>
       </div>
       <ul className="space-y-2">
         {helpers.map((helper) => (
-          <li key={helper._id} className="flex items-center justify-between">
-            <span>{helper.helper}</span>
-            {isUserHelper && helper.helper === currentUser && (
+          <li key={helper} className="flex items-center justify-between">
+            <span>{helper}</span>
+            {/* A helper can leave; the owner can remove anyone. */}
+            {(helper === currentUser || isOwner) && (
               <button
-                onClick={handleLeaveProject}
+                onClick={() => room.removeHelper(helper)}
                 className="btn btn-sm btn-outline btn-error"
               >
-                Verlassen
+                {helper === currentUser ? "Verlassen" : "Entfernen"}
               </button>
             )}
           </li>
@@ -217,7 +197,7 @@ const HelferListe = ({ proj_id, isOwner }: { proj_id: string; isOwner: boolean }
       </ul>
       {!isOwner && !isUserHelper && (
         <button
-          onClick={handleJoinProject}
+          onClick={() => room.joinProject(currentUser)}
           className="btn btn-sm btn-primary mt-4"
         >
           Beitreten
@@ -241,10 +221,16 @@ const MaterialListe = ({ items }: { items: string[] }) => {
   );
 };
 
-const KommentarListe = ({ proj_id, projectOwner }: { proj_id: string; projectOwner: string }) => {
-  const currentUser = useAppSelector((state) => state.user.name);
-  const { comments, loading, error, connected, addComment, deleteComment } =
-    useProjectChat(proj_id);
+const KommentarListe = ({
+  room,
+  projectOwner,
+  currentUser,
+}: {
+  room: Room;
+  projectOwner: string;
+  currentUser: string;
+}) => {
+  const { comments, loading, error, connected, addComment, deleteComment } = room;
   const [newComment, setNewComment] = useState<string>("");
 
   const sortedComments = [...comments].sort(
@@ -259,7 +245,7 @@ const KommentarListe = ({ proj_id, projectOwner }: { proj_id: string; projectOwn
   if (loading)
     return (
       <div className="alert alert-info">
-        <span>Loading comments...</span>
+        <span>Kommentare werden geladen...</span>
       </div>
     );
   if (error)
