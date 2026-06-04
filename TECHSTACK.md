@@ -2,7 +2,7 @@
 
 - Backend: Node.js (ES modules), Express
 - Database: CouchDB (client: `nano`)
-- Realtime: WebSocket (`ws`) — powers the live comment chat (subscribe per project, broadcast `comment_added`/`comment_deleted`)
+- Realtime: WebSocket (`ws`) — powers the whole live layer via two rooms: per-project (`subscribe` → comments, helpers, deletion) and the project list (`subscribe_projects` → project add/update/delete + live helper/comment counts)
 - Dev tooling: nodemon, Docker, Docker Compose
 
 ### Repository layout

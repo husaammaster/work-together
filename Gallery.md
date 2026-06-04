@@ -2,19 +2,31 @@
 
 **Work Together** ist ein Schwarzes Brett für Nachbarschafts- und Hilfsprojekte. Die Idee orientiert sich an eBay Kleinanzeigen, dreht sie aber um: Nicht Gegenstände werden inseriert, sondern **Projekte, die Hilfe brauchen**. Wer ein Vorhaben hat – einen Gemeinschaftsgarten, ein Reparaturcafé, Lern-Patenschaften – legt es an, beschreibt die gesuchte Helferzahl und die benötigten Materialien. Andere stöbern, treten als Helfer:innen bei und stimmen sich direkt auf der Projektseite ab.
 
-Das Besondere ist die **Echtzeit-Abstimmung**: Der Kommentarbereich jedes Projekts ist ein Live-Chat über WebSockets. Schreibt eine Person etwas, erscheint es sofort bei allen, die dieselbe Projektseite offen haben – ganz ohne Neuladen. So wird aus einer statischen Projektliste ein Ort, an dem sich Helfer:innen tatsächlich koordinieren.
+Das Besondere ist, dass die **ganze App in Echtzeit synchron** läuft. Nicht nur der Kommentar-Chat, sondern auch die Projektübersicht, die Helferlisten und alle Zähler werden über WebSockets live aktualisiert. Tritt jemand bei, kommentiert oder legt ein neues Projekt an, sehen es alle sofort – ganz ohne Neuladen. So wird aus einer statischen Projektliste ein Ort, an dem sich Helfer:innen tatsächlich koordinieren.
 
 Technisch ist es eine React-SPA (Vite, TypeScript, Tailwind/daisyUI) auf einem Express-Backend mit CouchDB, ergänzt um einen WebSocket-Server für den Live-Teil – alles per Docker Compose lauffähig.
 
 ![Übersicht](docs/gallery/overview.png)
 
+Jede Karte zeigt den Helferstand farbcodiert relativ zur gesuchten Anzahl – **rot** (0), **orange** (teilweise), **grün** (voll) – und die Kommentarzahl. Die ganze Karte ist anklickbar.
+
 ---
 
 ## Projektübersicht & Detailseite ✅
 
-Die Startseite listet alle Projekte als Karten mit Projektleiter:in, gesuchter Helferzahl, Beschreibung und Materialien. Ein Klick auf den Titel öffnet die Detailseite mit allen Abschnitten: Materialien, Helferliste und Kommentare. Sieht die Projektleiter:in ihre eigene Seite an, erscheinen zusätzlich die Aktionen **Bearbeiten** und **Löschen** – für alle anderen sind sie ausgeblendet.
+Die Startseite listet alle Projekte als anklickbare Karten mit Projektleiter:in, farbcodiertem Helferstand, Kommentarzahl, Beschreibung und Materialien. Die Detailseite zeigt alle Abschnitte: Materialien, Helferliste und Kommentare. Sieht die Projektleiter:in ihre eigene Seite an, erscheinen zusätzlich **Bearbeiten** und **Löschen** sowie ein **„Entfernen"** je Helfer – für alle anderen sind diese Aktionen ausgeblendet. Wird ein gerade geöffnetes Projekt (von irgendwem) gelöscht, wechselt die Seite live auf einen „Projekt wurde gelöscht"-Hinweis.
 
 ![Projekt-Detailseite mit Eigentümer-Aktionen](docs/gallery/feature-detail.png)
+
+---
+
+## Live-Projektübersicht ✅
+
+Die Übersicht ist kein statischer Snapshot: Sie abonniert beim Laden den Projektlisten-„Room" über WebSocket. Legt jemand ein Projekt an, tritt bei oder kommentiert, aktualisieren sich Karten, Farben und Zähler sofort – bei allen offenen Listen.
+
+Im Clip schaut „Sarah" nur auf die Übersicht, während andere im Hintergrund handeln: Das leere Fahrrad-Reparaturcafé bekommt Helfer (rot → orange), eine Kommentarzahl steigt, und ein **brandneues Projekt erscheint** unten in der Liste – ohne einen einzigen Klick auf ihrer Seite.
+
+<video src="https://github.com/husaammaster/work-together/raw/main/docs/gallery/feature-live-list.mp4" controls autoplay loop muted playsinline width="720"></video>
 
 ---
 
@@ -28,7 +40,7 @@ Die Startseite listet alle Projekte als Karten mit Projektleiter:in, gesuchter H
 
 ## Helfer-System ✅
 
-Wer nicht Eigentümer:in ist, kann einem Projekt mit einem Klick als Helfer:in **beitreten** und es wieder **verlassen**. Die Helferliste aktualisiert sich sofort, und ein farbcodierter Zähler signalisiert auf einen Blick den Bedarf: **rot** (keine Helfer), **orange** (wenige), **grün** (genug). Im Clip tritt „Kevin" dem Gemeinschaftsgarten bei – der Zähler springt auf „3 Helfer".
+Wer nicht Eigentümer:in ist, kann einem Projekt mit einem Klick als Helfer:in **beitreten** und es wieder **verlassen**; die Projektleiter:in kann zusätzlich einzelne Helfer **entfernen**. Die Helferliste und der Zähler aktualisieren sich live – auch für andere, die die Seite offen haben. Der Zähler ist farbcodiert **relativ zur gesuchten Anzahl**: rot bei 0, orange solange noch Plätze frei sind, grün sobald voll. Im Clip tritt „Kevin" dem Gemeinschaftsgarten bei und füllt ihn von „2/3" (orange) auf „3/3" (grün) auf.
 
 <video src="https://github.com/husaammaster/work-together/raw/main/docs/gallery/feature-helpers.mp4" controls autoplay loop muted playsinline width="720"></video>
 
@@ -46,7 +58,7 @@ Im Clip schreibt „Sarah" einen Kommentar (erscheint sofort), und kurz darauf t
 
 ## Theming ✅
 
-Das Frontend nutzt Tailwind CSS v4 mit daisyUI v5 und stellt mehrere Themes über das `data-theme`-Attribut bereit. Der Header wechselt das Theme automatisch durch, sodass die Oberfläche von hell bis dunkel variiert.
+Das Frontend nutzt Tailwind CSS v4 mit daisyUI v5 und stellt mehrere Themes über das `data-theme`-Attribut bereit. Im Header wählt man das Theme manuell aus einem Umschalter; die Auswahl wird in `localStorage` gemerkt und beim nächsten Besuch wiederhergestellt.
 
 ---
 
@@ -59,16 +71,23 @@ Das Frontend nutzt Tailwind CSS v4 mit daisyUI v5 und stellt mehrere Themes übe
 
 ## Architektur
 
+![Architektur](docs/gallery/architecture.png)
+
+REST bedient den Erstabruf (Listen/Detail) und die Projektformulare; der WebSocket-Server hält alles live synchron – über zwei „Rooms": einen pro Projekt (Kommentare, Helfer, Löschung) und einen für die Projektliste (Hinzufügen/Ändern/Löschen von Projekten und Live-Zähler). Auch die REST-Mutationen broadcasten ihre Änderungen über den WebSocket-Server. Beide schreiben über `nano` in dieselben CouchDB-Datenbanken.
+
+<details><summary>Diagramm-Quelle (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
-  subgraph Browser["React SPA (Vite, TS, Redux, Tailwind/daisyUI)"]
-    UI[Projektseiten]
+  subgraph Browser["React SPA - Vite, TS, Redux, Tailwind/daisyUI"]
+    UI[Projektliste & Detailseiten]
   end
-  UI -- "REST: Projekte, Helfer, Erstabruf Kommentare" --> API[Express REST :80]
-  UI -- "WebSocket: subscribe / new_comment / delete_comment" --> WS[ws-Server :8080]
-  WS -- "comment_added / comment_deleted (broadcast pro Projekt-Room)" --> UI
-  API --> DB[(CouchDB :5984)]
+  UI -- "REST: Listen, Detail, Projekt-Formulare" --> API["Express REST :80"]
+  UI -- "WS: subscribe / subscribe_projects / new_comment / join_project ..." --> WS["ws-Server :8080"]
+  WS -- "Broadcasts: comment_*, helper_*, project_*, counts_updated" --> UI
+  API -- "broadcastet Projekt-Aenderungen" --> WS
+  API --> DB[("CouchDB :5984")]
   WS --> DB
 ```
 
-Der REST-Teil bedient klassische CRUD-Operationen und den Erstabruf der Kommentare; der WebSocket-Server hält die Kommentare projektweise live synchron. Beide schreiben über `nano` in dieselben CouchDB-Datenbanken.
+</details>
