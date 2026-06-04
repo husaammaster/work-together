@@ -2,7 +2,7 @@
 
 - Backend: Node.js (ES modules), Express
 - Database: CouchDB (client: `nano`)
-- Realtime: WebSocket (`ws`)
+- Realtime: WebSocket (`ws`) — powers the live comment chat (subscribe per project, broadcast `comment_added`/`comment_deleted`)
 - Dev tooling: nodemon, Docker, Docker Compose
 
 ### Repository layout
@@ -36,8 +36,8 @@ Notes:
 
 - `develop.watch` rules are active only when starting with `docker compose up --watch` (or `docker compose watch`).
 - React app runs in Docker container with hot-reload via Vite dev server.
-- Backend and React communicate via Docker Compose network (`backend` service name).
-- Environment files control API base URL: `.env.docker` for Docker, `.env.development` for local dev.
+- The React SPA runs in the browser, so it talks to the backend via the host-published ports (`http://localhost:80` for REST, `ws://localhost:8080` for the WebSocket) — not the internal `backend` service name. Compose publishes both ports.
+- Environment files control the API/WS base URLs: `.env.docker` for the Docker dev server, `.env.development` for local dev.
 
 ### Frontend architecture
 
