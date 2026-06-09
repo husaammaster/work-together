@@ -35,13 +35,13 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
 - Projekt-Datenbank (vollständig funktional)
 - Projekt-Helfer-Datenbank (vollständig funktional)
 - Kommentar-Datenbank (vollständig funktional)
-- Webserver (Express.js auf Port 80)
+- Webserver (Express.js auf Port 5100)
 - WebSocket-Server (auf Port 8080)
 - WebSocket-Handlers (Infrastruktur vorhanden, aber nicht genutzt)
 
 ### Frontend:
 
-- **Legacy Frontend** (`/public`): Static HTML/JS/CSS, served by Express on port 80
+- **Legacy Frontend** (`/public`): Static HTML/JS/CSS, served by Express on port 5100
 - **React SPA (Vite)** (`/react_app`): Complete frontend with all CRUD operations
   - Containerized with Docker for reproducible builds
   - Hot-reload development mode via `npm run dev -- --host`
@@ -49,7 +49,7 @@ Inhaltlicher Fokus: mehrere couchDB Datenbanken, express Server, CRUD Operatione
   - State Management with Redux Toolkit
   - Styling with Tailwind CSS v4 + daisyUI v5
   - TypeScript support (`.tsx` components)
-  - Accessible at `http://localhost:5174` (Docker dev) or `http://localhost:5173` (local dev)
+  - Accessible at `http://localhost:5174` (Docker dev) or `http://localhost:5101` (local dev)
 
 ### SPA Routes (React Router)
 
@@ -142,8 +142,15 @@ docker compose up --watch
 
 **Services**:
 
-- **Backend**: Express API on port 80 (http://localhost/)
-- **React Local Dev**: Vite dev server on port 5173 (http://localhost:5173/)
+> **Ports:** see the repo-wide registry at [`../PORTS.md`](../PORTS.md)
+> (work-together owns block **5100–5199** + 8080 / 5984). The backend moved
+> **80 → 5100** (no more sudo for local dev) and the local Vite dev server moved
+> **5173 → 5101**, to avoid colliding with `ai_companion` and
+> `automatische_bewerbungen`.
+
+- **Backend**: Express API on port 5100 (http://localhost:5100/)
+- **WebSocket**: WS server on port 8080
+- **React Local Dev**: Vite dev server on port 5101 (http://localhost:5101/)
 - **React Docker Dev**: Vite dev server on port 5174 (http://localhost:5174/)
 - **CouchDB**: Database on port 5984
 
@@ -155,10 +162,10 @@ docker compose up --watch
 
 **Environment files**:
 
-- `.env.development`: Local dev (React on `localhost:5173`)
+- `.env.development`: Local dev (React on `localhost:5101`)
 - `.env.docker`: Docker dev (React on `localhost:5174`, uses `backend` service name)
 - `.env.production`: Production builds
 
 **CORS**:
 
-- Backend allows `localhost:5173` (local dev) and `localhost:5174` (Docker dev)
+- Backend allows `localhost:5101` (local dev) and `localhost:5174` (Docker dev)

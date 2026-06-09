@@ -148,7 +148,7 @@ const HelferListe = ({ proj_id, isOwner }: { proj_id: string; isOwner: boolean }
       await fetch(`${apiBase}/join_project`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proj_id, nutzer: currentUser }),
+        body: JSON.stringify({ proj_id, helper: currentUser }),
       });
       setHelpers([...helpers, { _id: "", proj_id, helper: currentUser }]);
       setHelperCount(helperCount + 1);
@@ -162,7 +162,7 @@ const HelferListe = ({ proj_id, isOwner }: { proj_id: string; isOwner: boolean }
       await fetch(`${apiBase}/leave_project`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proj_id, nutzer: currentUser }),
+        body: JSON.stringify({ proj_id, helper: currentUser }),
       });
       setHelpers(helpers.filter((h) => h.helper !== currentUser));
       setHelperCount(helperCount - 1);

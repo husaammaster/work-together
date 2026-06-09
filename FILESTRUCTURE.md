@@ -60,9 +60,9 @@ React (Vite) single-page application frontend, containerized with Docker.
 - `index.html`: Entry point with root div.
 - `Dockerfile`: Multi-stage build (Node build stage, no runtime stage for dev).
 - `.dockerignore`: Excludes node_modules, dist, .DS_Store.
-- `.env.development`: API base URL for local dev (`http://localhost:80`).
-- `.env.docker`: API base URL for Docker dev (`http://backend:80`).
-- `.env.production`: API base URL for production builds (`http://localhost:80`).
+- `.env.development`: API base URL for local dev (`http://localhost:5100`).
+- `.env.docker`: API base URL for Docker dev (`http://backend:5100`).
+- `.env.production`: API base URL for production builds (`http://localhost:5100`).
 - `package.json`: React app dependencies.
 - `vite.config.js`: Vite configuration.
 - Other Vite config files.

@@ -33,7 +33,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - "80:80"
+      - "5100:5100"   # backend; see ../PORTS.md (was 80:80)
     depends_on:
       couchdb:
         condition: service_healthy

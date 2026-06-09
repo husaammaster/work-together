@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, Outlet, NavLink } from "react-router-dom";
 import {
   ProjectListPage,
@@ -11,6 +11,23 @@ import {
 } from "./Pages.tsx";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { setUser } from "./features/userSlice";
+
+// Themes available at runtime (must match the list enabled in index.css).
+const THEMES: string[] = [
+  "light",
+  "dark",
+  "cupcake",
+  "dracula",
+  "synthwave",
+  "halloween",
+  "cyberpunk",
+  "forest",
+  "aqua",
+  "luxury",
+  "pastel",
+  "emerald",
+];
+const THEME_KEY = "wt_theme";
 
 const App = () => {
   return (
@@ -33,6 +50,23 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.name);
 
+  // Theme persists across reloads; cycled manually via the button below.
+  const [theme, setTheme] = useState<string>(
+    () => localStorage.getItem(THEME_KEY) || "light"
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_KEY, theme);
+  }, [theme]);
+
+  const cycleTheme = () => {
+    setTheme((prev) => {
+      const next = (THEMES.indexOf(prev) + 1) % THEMES.length;
+      return THEMES[next] || "light";
+    });
+  };
+
   const handleUserChange = (evnt: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUser(evnt.target.value));
   };
@@ -49,6 +83,14 @@ const Header = () => {
           </div>
         </div>
         <div className="navbar-end gap-2">
+          <button
+            type="button"
+            onClick={cycleTheme}
+            className="btn btn-ghost btn-sm"
+            title="Theme wechseln"
+          >
+            🎨 {theme}
+          </button>
           <label htmlFor="user" className="text-sm">
             Eingeloggt als
           </label>
@@ -163,27 +205,6 @@ const Layout = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const themes: string[] = [
-      "cupcake",
-      "dracula",
-      "forest",
-      "aqua",
-      "luxury",
-      "pastel",
-      "emerald",
-    ];
-    const htmlEl = document.documentElement;
-    const current: string | null = htmlEl.getAttribute("data-theme");
-    console.log(`[Theme] current: ${current || "(none)"}`);
-    let idx: number = Math.max(0, themes.indexOf(current || ""));
-    const timer = setInterval(() => {
-      idx = (idx + 1) % themes.length;
-      htmlEl.setAttribute("data-theme", themes[idx] || "light");
-      console.log(`[Theme] switched to: ${themes[idx]}`);
-    }, 10000);
-    return () => clearInterval(timer);
-  }, []);
   return (
     <>
       <Header />
