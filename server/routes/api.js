@@ -3,11 +3,26 @@
 import { dbScope, dbNames } from "../datenbanken/openDBs.js";
 import { server } from "../server.js";
 import { broadcast } from "../wsServer.js";
+import { seedDatabase } from "../seed.js";
 import formidable from 'formidable';
 
 // ============ HEALTH CHECK ============
 server.get("/backend_health", (request, response) => {
   response.json({ status: "ok", message: "Backend läuft" });
+});
+
+// ============ DEV SEED / RESET ============
+// Reset the databases to a known demo state (3 projects at red/orange/green
+// helper fill levels + comments). Handy for local testing and for recording.
+server.post("/dev/seed", async (request, response) => {
+  console.log(`\n${SERVERNAME}: Seed/Reset der Datenbank angefordert`);
+  try {
+    const result = await seedDatabase();
+    response.json(result);
+  } catch (err) {
+    console.warn(err);
+    response.status(500).json({ success: false, message: String(err) });
+  }
 });
 
 const SERVERNAME = "Nodemon Server";
