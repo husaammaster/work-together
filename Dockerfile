@@ -8,8 +8,9 @@ RUN npm install
 
 COPY . .
 
-ENV PORT=80
+# Port: see ../PORTS.md (work-together backend = 5100, was 80).
+ENV PORT=5100
 
-EXPOSE 80
+EXPOSE 5100
 
 CMD ["npm", "start"]

@@ -12,6 +12,23 @@ import {
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { setUser } from "./features/userSlice";
 
+// Themes available at runtime (must match the list enabled in index.css).
+const THEMES: string[] = [
+  "light",
+  "dark",
+  "cupcake",
+  "dracula",
+  "synthwave",
+  "halloween",
+  "cyberpunk",
+  "forest",
+  "aqua",
+  "luxury",
+  "pastel",
+  "emerald",
+];
+const THEME_KEY = "wt_theme";
+
 const App = () => {
   return (
     <div className="">
@@ -29,30 +46,26 @@ const App = () => {
   );
 };
 
-const THEMES = [
-  "emerald",
-  "light",
-  "dark",
-  "cupcake",
-  "dracula",
-  "forest",
-  "aqua",
-  "luxury",
-  "pastel",
-  "synthwave",
-  "cyberpunk",
-  "halloween",
-];
-
-const Header = ({
-  theme,
-  onThemeChange,
-}: {
-  theme: string;
-  onThemeChange: (theme: string) => void;
-}) => {
+const Header = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.name);
+
+  // Theme persists across reloads; cycled manually via the button below.
+  const [theme, setTheme] = useState<string>(
+    () => localStorage.getItem(THEME_KEY) || "light"
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem(THEME_KEY, theme);
+  }, [theme]);
+
+  const cycleTheme = () => {
+    setTheme((prev) => {
+      const next = (THEMES.indexOf(prev) + 1) % THEMES.length;
+      return THEMES[next] || "light";
+    });
+  };
 
   const handleUserChange = (evnt: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUser(evnt.target.value));
@@ -70,21 +83,14 @@ const Header = ({
           </div>
         </div>
         <div className="navbar-end gap-2">
-          <label htmlFor="theme" className="text-sm">
-            Theme
-          </label>
-          <select
-            id="theme"
-            value={theme}
-            onChange={(e) => onThemeChange(e.target.value)}
-            className="select select-bordered select-sm w-32"
+          <button
+            type="button"
+            onClick={cycleTheme}
+            className="btn btn-ghost btn-sm"
+            title="Theme wechseln"
           >
-            {THEMES.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
+            🎨 {theme}
+          </button>
           <label htmlFor="user" className="text-sm">
             Eingeloggt als
           </label>
@@ -166,9 +172,6 @@ const Footer = () => {
 const Layout = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.name);
-  const [theme, setTheme] = useState<string>(
-    () => localStorage.getItem("theme") || "emerald",
-  );
 
   useEffect(() => {
     // Set default random user if not already set
@@ -202,15 +205,9 @@ const Layout = () => {
     }
   }, []);
 
-  // Apply the chosen theme and remember it (no more auto-rotation).
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
   return (
     <>
-      <Header theme={theme} onThemeChange={setTheme} />
+      <Header />
       <main className="max-w-3xl mx-auto p-4">
         <Outlet />
       </main>
