@@ -8,9 +8,9 @@ Die ganze App ist **in Echtzeit synchron**: die Projektübersicht, die Helfer- u
 
 ![Übersicht](docs/gallery/overview.png)
 
-Während eine Person zusieht, aktualisiert sich die Übersicht live, sobald andere beitreten, kommentieren oder neue Projekte anlegen:
+Während eine Person zusieht (links), aktualisiert sich die Übersicht live, sobald jemand anderes (rechts) beitritt, kommentiert oder ein neues Projekt anlegt – die Echtzeit-Clips sind als zwei gleichzeitig aufgenommene Fenster nebeneinander zu sehen:
 
-<video src="https://github.com/husaammaster/work-together/raw/main/docs/gallery/feature-live-list.mp4" controls autoplay loop muted playsinline width="720"></video>
+<video src="https://github.com/husaammaster/work-together/raw/main/docs/gallery/feature-live-list.mp4" controls autoplay loop muted playsinline width="860"></video>
 
 > Hinweis: Es gibt (noch) keine echte Anmeldung – oben rechts wählt man frei einen Namen und ist „eingeloggt als" diese Person. Das genügt, um Eigentümer, Helfer und Kommentarautoren auseinanderzuhalten.
 
@@ -25,7 +25,7 @@ Während eine Person zusieht, aktualisiert sich die Übersicht live, sobald ande
 - **„Meine Projekte"** – serverseitig nach Nutzer gefilterte Projektliste.
 - **Eigentümer-Rechte** – „Bearbeiten" und „Löschen" erscheinen nur für die Projektleiter:in; beim Bearbeiten kann das Projekt übergeben werden; die Projektleiter:in kann außerdem einzelne Helfer entfernen. Wird ein offenes Projekt gelöscht, zeigt die Seite live einen „Projekt wurde gelöscht"-Hinweis.
 - **Echtzeit-Helfer & -Kommentare über WebSocket** – beitreten/verlassen/entfernen und Kommentare schreiben/löschen laufen über projektbezogene „Rooms" (kein Polling); alle offenen Seiten aktualisieren sich sofort. Ein „Live"-Badge zeigt die WebSocket-Verbindung, Projektleiter-Kommentare bekommen ein Badge.
-- **Theming** – Tailwind v4 + daisyUI v5 mit manuellem Theme-Umschalter im Header (Auswahl wird in `localStorage` gemerkt).
+- **Theming** – Tailwind v4 + daisyUI v5; im Header schaltet ein 🎨-Button manuell durch die Themes (kein Auto-Wechsel), die Auswahl wird in `localStorage` gemerkt.
 - **Containerisierung** – CouchDB, Express-Backend und React-Dev-Server laufen per Docker Compose mit File-Sync/Hot-Reload.
 
 ### 📋 Geplant / angelegt, aber nicht aktiv
@@ -67,12 +67,20 @@ docker compose up -d couchdb
 #    COUCHDB_URL muss auf localhost:5984 zeigen, wenn das Backend lokal läuft
 npm install
 COUCHDB_URL=localhost:5984 npm run start
-#    → REST-API auf http://localhost:80, WebSocket auf ws://localhost:8080
+#    → REST-API auf http://localhost:5100, WebSocket auf ws://localhost:8080
 
 # 4. React-Frontend
 cd react_app
 npm install
-npm run dev                 # → http://localhost:5173
+npm run dev                 # → http://localhost:5101
+```
+
+Ports folgen dem `PORTS.md`-Schema (Block 5100–5199): Backend `5100`, lokaler React-Dev `5101`, WebSocket `8080`, CouchDB `5984`.
+
+Zum Befüllen/Zurücksetzen der Datenbank auf einen bekannten Demo-Stand (3 Projekte mit unterschiedlichen Helfer-Füllständen + Kommentare) gibt es einen Endpunkt – praktisch für Tests und Aufnahmen:
+
+```bash
+curl -X POST http://localhost:5100/dev/seed
 ```
 
 ### Alternativ: kompletter Stack in Docker
@@ -84,7 +92,7 @@ cp .env.example .env        # COUCHDB_URL=couchdb:5984 für den Compose-Pfad bel
 docker compose up --watch
 ```
 
-- Backend (REST): http://localhost:80, WebSocket: ws://localhost:8080
+- Backend (REST): http://localhost:5100, WebSocket: ws://localhost:8080
 - React-Dev-Server: http://localhost:5174
 - CouchDB: http://localhost:5984
 
@@ -104,12 +112,13 @@ Eine ausführliche, bebilderte Tour durch alle Features steht in [Gallery.md](Ga
 
 ## API-Endpunkte
 
-REST (Express, Port 80):
+REST (Express, Port 5100):
 
 REST wird für den Erstabruf (Listen/Detail) und die Projektformulare genutzt; Mutationen werden zusätzlich über WebSocket an alle offenen Clients gebroadcastet.
 
 | Bereich | Endpunkt | Zweck |
 | --- | --- | --- |
+| Dev | `POST /dev/seed` | Datenbank auf den Demo-Seed zurücksetzen (für Tests/Aufnahmen) |
 | Projekte | `POST /projects` | Alle Projekte (oder nach Nutzer gefiltert), inkl. Helfer-/Kommentarzahl |
 | | `POST /new_project` | Projekt anlegen (gibt neue `_id` zurück, broadcastet `project_added`) |
 | | `POST /project_page` | Einzelnes Projekt laden |

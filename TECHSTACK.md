@@ -36,7 +36,7 @@ Notes:
 
 - `develop.watch` rules are active only when starting with `docker compose up --watch` (or `docker compose watch`).
 - React app runs in Docker container with hot-reload via Vite dev server.
-- The React SPA runs in the browser, so it talks to the backend via the host-published ports (`http://localhost:80` for REST, `ws://localhost:8080` for the WebSocket) — not the internal `backend` service name. Compose publishes both ports.
+- The React SPA runs in the browser, so it talks to the backend via the host-published ports (`http://localhost:5100` for REST, `ws://localhost:8080` for the WebSocket) — not the internal `backend` service name. Compose publishes both ports.
 - Environment files control the API/WS base URLs: `.env.docker` for the Docker dev server, `.env.development` for local dev.
 
 ### Frontend architecture
@@ -50,7 +50,7 @@ Notes:
   - Routing: React Router for SPA navigation (/, /my_projects/:nutzer, /project/:proj_id, /project/:proj_id/edit, /new_project).
   - Containerized: Runs in Docker on port 5174 (mapped from 5173 inside container).
   - Hot-reload: Vite dev server with `--host` flag for accessibility from host machine.
-  - API Communication: Fetches from backend via Docker Compose network (`http://backend:5100`).
+  - API Communication: Fetches from the backend via the host-published port (`http://localhost:5100`).
   - Features: Full CRUD for projects, helpers, comments; project detail pages; user management; theme switching.
 
 ### CORS
